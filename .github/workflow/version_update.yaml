@@ -1,0 +1,18 @@
+name: Version Update
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  version_update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Semantic Version Release
+        uses: python-semantic-release/python-semantic-release@v10.2.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          force: patch
+          changelog: true

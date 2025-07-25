@@ -3,13 +3,13 @@ name: Test
 on:
   pull_request:
     branches: [main]
-  workflow_run:
-    workflows: ["Security"]
-    types:
-      - completed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
+  job3:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

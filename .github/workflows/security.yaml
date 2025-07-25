@@ -3,12 +3,14 @@ name: Security
 on:
   pull_request:
     branches: [main]
-  workflow_run:
-    workflows: ["Lint"]
-    types:
-      - completed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+
 jobs:
-  bandit:
+  job2:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -1,0 +1,64 @@
+name: "🚀 Feature Request"
+description: "🛠️ Propose a new feature or improvement."
+title: "🚩 [Feature]: "
+labels: ["enhancement", "feature request"]
+assignees:
+  - "pradanaadn"
+  - "achmadrrb"
+  - "ahmadhufron"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        👥 Please provide detailed information about the requested feature or improvement.
+  - type: input
+    id: team-member
+    attributes:
+      label: "👤 Team Member"
+      description: "Who is submitting this request?"
+      placeholder: ex. your.name@example.com
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: "📝 Feature Summary"
+      description: "Briefly summarize the feature or improvement."
+      placeholder: Short summary of the feature.
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: "💡 Motivation"
+      description: "Why is this feature needed? What problem does it solve?"
+      placeholder: Explain the motivation and expected impact.
+    validations:
+      required: true
+  - type: checkboxes
+    id: stack
+    attributes:
+      label: "🧩 Relevant Stack"
+      description: "Which parts of the stack does this relate to?"
+      options:
+        - label: "⚡ FastAPI"
+        - label: "🤖 Machine Learning"
+        - label: "🔗 HTMX"
+        - label: "🌲 Alpine.js"
+        - label: "🔧 DevOps/Infra"
+  - type: textarea
+    id: implementation-notes
+    attributes:
+      label: "🔍 Implementation Notes"
+      description: "Any technical notes, dependencies, or considerations?"
+      placeholder: Add technical details, dependencies, or blockers.
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: "📎 Additional Context"
+      description: "Any other context, references, or links?"
+      placeholder: Add anything else relevant.
+    validations:
+      required: false

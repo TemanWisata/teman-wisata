@@ -8,8 +8,11 @@ dependencies = [
     "fastapi>=0.116.1",
     "logger>=1.4",
     "loguru>=0.7.3",
+    "mlflow>=3.1.4",
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
+    "rich>=14.1.0",
+    "scalar-fastapi>=1.2.2",
 ]
 
 [dependency-groups]

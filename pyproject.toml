@@ -1,0 +1,40 @@
+[project]
+name = "teman-wisata"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.116.1",
+    "logger>=1.4",
+    "loguru>=0.7.3",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+]
+
+[dependency-groups]
+dev = [
+    "cleanpy>=0.5.1",
+    "mypy>=1.17.0",
+    "pre-commit>=4.2.0",
+    "python-semantic-release>=10.2.0",
+    "ruff>=0.12.5",
+]
+
+[tool.ruff]
+line-length = 180
+target-version = 'py312'
+exclude = ['build', ]
+extend-ignore = [
+    "D203",  # Ignore: one-blank-line-before-class
+    "D213",  # Ignore: multi-line-summary-second-line
+]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ruff.lint]
+select = ["ALL"]
+
+ignore = []
+unfixable = ["B"]

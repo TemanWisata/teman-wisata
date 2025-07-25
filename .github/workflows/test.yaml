@@ -1,13 +1,15 @@
-name: Lint
+name: Test
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  lint:
+  job3:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,7 +17,5 @@ jobs:
         uses: astral-sh/setup-uv@v6
       - name: Install dependencies
         run: uv sync
-      - name: Lint with ruff
-        run: uv run ruff check .
-      - name: Type check with mypy
-        run: uv run mypy .
+      - name: Run tests with pytest
+        run: uv run pytest . -s -vv

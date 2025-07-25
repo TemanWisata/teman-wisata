@@ -33,7 +33,7 @@ repos:
         pass_filenames: false
       - id: mypy
         name: mypy
-        entry: mypy .
+        entry: mypy app
         language: system
         types: [python]
         pass_filenames: false
@@ -46,7 +46,7 @@ repos:
     rev: 1.8.6
     hooks:
       - id: bandit
-        args: ["-r", ".", "-x",  "./.venv"]
+        args: ["-r", "./app/"]
         pass_filenames: false
         types: [python]
   - repo: https://github.com/commitizen-tools/commitizen

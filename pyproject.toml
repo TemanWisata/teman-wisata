@@ -14,9 +14,12 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "bandit>=1.8.6",
     "cleanpy>=0.5.1",
     "mypy>=1.17.0",
     "pre-commit>=4.2.0",
+    "pytest-anyio>=0.0.0",
+    "pytest-cov>=6.2.1",
     "python-semantic-release>=10.2.0",
     "ruff>=0.12.5",
 ]

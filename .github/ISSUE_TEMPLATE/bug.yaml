@@ -1,0 +1,76 @@
+name: "🐞 Bug Report"
+description: "🚨 Report a bug or unexpected behavior."
+title: "🐛 [Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - "pradanaadn"
+  - "achmadrrb"
+  - "ahmadhufron"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        🙏 Thank you for reporting a bug! Please fill out the details below to help us resolve the issue.
+  - type: input
+    id: reporter
+    attributes:
+      label: "👤 Reporter"
+      description: "Who is reporting this bug?"
+      placeholder: ex. your.name@example.com
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: "❗ What happened?"
+      description: "Describe the bug and what you expected to happen."
+      placeholder: Tell us what you see and what you expected.
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: "🪜 Steps to Reproduce"
+      description: "How can we reproduce the bug?"
+      placeholder: Step-by-step instructions.
+    validations:
+      required: true
+  - type: dropdown
+    id: stack
+    attributes:
+      label: "🧩 Relevant Stack"
+      description: "Which parts of the stack are affected?"
+      options:
+        - "⚡ FastAPI"
+        - "🤖 Machine Learning"
+        - "🔗 HTMX"
+        - "🌲 Alpine.js"
+        - "🔧 DevOps/Infra"
+      multiple: true
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: "📋 Relevant Log Output"
+      description: "Paste any relevant log output. This will be automatically formatted."
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: "💻 Environment"
+      description: "Please provide details about your environment (OS, browser, Python version, etc.)."
+      placeholder: ex. Ubuntu 22.04, Chrome 120, Python 3.11
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: "📎 Additional Context"
+      description: "Any other context, screenshots, or references?"
+      placeholder: Add anything else relevant.
+    validations:
+      required: false

@@ -16,5 +16,4 @@ jobs:
         uses: python-semantic-release/python-semantic-release@v10.2.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          force: false
           changelog: true

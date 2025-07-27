@@ -38,13 +38,12 @@ body:
   - type: checkboxes
     id: stack
     attributes:
-      label: "🧩 Relevant Stack"
+      label: "🧩 Relevant Part"
       description: "Which parts of the stack does this relate to?"
       options:
-        - label: "⚡ FastAPI"
+        - label: "⚡ Backend"
+        - label: "🚪 Frontend"
         - label: "🤖 Machine Learning"
-        - label: "🔗 HTMX"
-        - label: "🌲 Alpine.js"
         - label: "🔧 DevOps/Infra"
   - type: textarea
     id: implementation-notes

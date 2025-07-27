@@ -36,17 +36,16 @@ body:
       placeholder: Step-by-step instructions.
     validations:
       required: true
-  - type: dropdown
+  - type: label
     id: stack
     attributes:
       label: "🧩 Relevant Stack"
       description: "Which parts of the stack are affected?"
       options:
-        - "⚡ FastAPI"
-        - "🤖 Machine Learning"
-        - "🔗 HTMX"
-        - "🌲 Alpine.js"
-        - "🔧 DevOps/Infra"
+        - label: "⚡ Backend"
+        - label: "🚪 Frontend"
+        - label: "🤖 Machine Learning"
+        - label: "🔧 DevOps/Infra"
       multiple: true
     validations:
       required: false

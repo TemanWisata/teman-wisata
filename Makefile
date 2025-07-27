@@ -11,3 +11,7 @@ setup:
 lint:
 	uv run ruff check . 
 	uv run mypy .
+
+
+setup-ui:
+	echo "Setting up the project..."

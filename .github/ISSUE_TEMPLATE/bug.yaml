@@ -46,7 +46,6 @@ body:
         - label: "🚪 Frontend"
         - label: "🤖 Machine Learning"
         - label: "🔧 DevOps/Infra"
-      multiple: true
     validations:
       required: false
   - type: textarea

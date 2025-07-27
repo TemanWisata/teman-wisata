@@ -22,6 +22,7 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
-    "src"
+    "src",
+    "eslint.config.ts"
   ]
 }

@@ -34,16 +34,18 @@ dev = [
 line-length = 180
 target-version = 'py312'
 exclude = ['build', ]
-extend-ignore = [
-    "D203",  # Ignore: one-blank-line-before-class
-    "D213",  # Ignore: multi-line-summary-second-line
-]
 
 [tool.ruff.format]
 quote-style = "double"
 
 [tool.ruff.lint]
 select = ["ALL"]
+extend-ignore = [
+    "D203",  # Ignore: one-blank-line-before-class
+    "D213",  # Ignore: multi-line-summary-second-line
+    "S101"
+]
+
 
 ignore = []
 unfixable = ["B"]

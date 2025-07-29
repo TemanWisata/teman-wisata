@@ -1,0 +1,73 @@
+name: "🚧 Task"
+description: "📝 Create a task-based issue."
+title: "🚧 [Task]: "
+labels: ["task", "✨ new-task"]
+assignees:
+  - "pradanaadn"
+  - "achmadrrb"
+  - "ahmadhufron"
+body:
+  - type: markdown
+    attributes:
+      value: "## 🚀 Task Details"
+  - type: textarea
+    id: summary
+    attributes:
+      label: "📝 Summary"
+      description: "Briefly summarize the task. 🎯"
+      placeholder: "e.g., Implement user authentication module."
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: "💡 Motivation"
+      description: "Why is this task needed? What problem does it solve? 🤔"
+      placeholder: "e.g., To secure user data and enable personalized user experiences."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: "✅ Acceptance Criteria"
+      description: "What conditions must be met for this task to be complete? ✔️"
+      placeholder: |
+        - [ ] Condition 1
+        - [ ] [ ] Condition 2
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: "🪜 Steps"
+      description: "Outline the detailed steps required. 👣"
+      placeholder: |
+        1. Step 1
+        2. Step 2
+    validations:
+      required: true
+  - type: checkboxes
+    id: stack
+    attributes:
+      label: "🧩 Relevant Part"
+      options:
+        - label: "⚡ Backend"
+        - label: "🚪 Frontend"
+        - label: "🤖 Machine Learning"
+        - label: "🔧 DevOps/Infra"
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: "🔗 Dependencies"
+      description: "Any other tasks or factors this task depends on? 🤝"
+      placeholder: "e.g., Requires database schema finalization."
+    validations:
+      required: false
+  - type: textarea
+    id: additional-notes
+    attributes:
+      label: "📎 Additional Notes"
+      description: "Any other context, references, or links? 📚"
+      placeholder: "e.g., Link to design mockups or API documentation."
+    validations:
+      required: false

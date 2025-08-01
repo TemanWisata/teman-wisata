@@ -2,7 +2,10 @@ create table if not exists public.users (
   id uuid primary key default gen_random_uuid(),
   username text unique not null,
   password text not null,
-  full_name text,
-  province text,
-  created_at timestamp with time zone default timezone('utc'::text, now())
+  dob date not null,
+  full_name text not null,
+  province text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()),
+  updated_at timestamp with time zone default timezone('utc'::text, now()),
+  deleted_at timestamp with time zone null
 );

@@ -49,5 +49,15 @@ class Config(BaseSettings):
         """Get the project version."""
         return Utils.get_version()
 
+    @property
+    def is_dev(self) -> bool:
+        """Check if the application is running in development mode."""
+        return self.environment == Environment.DEV
+
+    @property
+    def is_production(self) -> bool:
+        """Check if the application is running in production mode."""
+        return self.environment == Environment.PRODUCTION
+
 
 CONFIG = Config()

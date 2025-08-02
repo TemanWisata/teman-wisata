@@ -4,7 +4,6 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Never
 
-import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, JSONResponse
 from humanize import naturalsize
@@ -94,7 +93,3 @@ async def scalar_docs() -> HTMLResponse:
         openapi_url=app.openapi_url,  # type: ignore  # noqa: PGH003
         title=app.title,
     )
-
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", reload=CONFIG.is_dev)

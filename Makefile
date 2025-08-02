@@ -17,4 +17,4 @@ setup-ui:
 	echo "Setting up the project..."
 
 run:
-	uv run app/main.py
+	uv run main.py

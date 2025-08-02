@@ -5,7 +5,7 @@ from fastapi import APIRouter, Request
 from app.api.v1.schema import APIResponse
 from app.auth.service import UserService
 from app.infrastructure.di import SupabaseClientDependency
-from app.model import SignUpRequest
+from app.model import LoginRequest, SignUpRequest
 
 router = APIRouter(prefix="/auth")
 
@@ -18,8 +18,10 @@ async def register(request: Request, supabase: SupabaseClientDependency, user_da
 
 
 @router.post("/login")
-async def login(request: Request, supabase: SupabaseClientDependency) -> None:
+async def login(request: Request, supabase: SupabaseClientDependency, auth: LoginRequest) -> APIResponse:  # noqa: ARG001
     """Endpoint for user login."""
+    await UserService.authenticate_user(supabase, username=auth.username, password=auth.password.get_secret_value())
+    return APIResponse(success=True, message="User logged in successfully")
 
 
 @router.post("/logout")

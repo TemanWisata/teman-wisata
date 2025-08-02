@@ -25,7 +25,7 @@ class SignUpRequest(BaseModel):
 
     username: str = Field(description="Username for the new user.")
     password: SecretStr = Field(description="Password for the new user.")
-    dob: date = Field(description="Date of birth of the new user.")
+    dob: date = Field(description="Date of birth of the new user. Format: YYYY-MM-DD")
     full_name: str | None = Field(default=None, description="Full name of the new user.")
     province: str = Field(description="Province of the new user.")
 
@@ -42,3 +42,10 @@ class SignUpRequest(BaseModel):
         if "dob" in user_dict and isinstance(user_dict["dob"], date):
             user_dict["dob"] = user_dict["dob"].isoformat()
         return user_dict
+
+
+class LoginRequest(BaseModel):
+    """Request model for user login."""
+
+    username: str = Field(description="Username for the user.")
+    password: SecretStr = Field(description="Password for the user.")

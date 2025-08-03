@@ -1,12 +1,8 @@
-"""Main module for the teman-wisata project."""
+"""The main entry point for the Teman Wisata application."""
 
-from loguru import logger
+import uvicorn
 
-
-def main() -> None:
-    """Print a greeting message."""
-    logger.info("Hello from teman-wisata!")
-
+from app.core import CONFIG
 
 if __name__ == "__main__":
-    main()
+    uvicorn.run("app.main:app", reload=CONFIG.is_dev)

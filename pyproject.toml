@@ -5,14 +5,19 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "argon2-cffi>=25.1.0",
+    "authlib>=1.6.1",
     "fastapi>=0.116.1",
-    "logger>=1.4",
+    "humanize>=4.12.3",
     "loguru>=0.7.3",
+    "minio>=7.2.16",
     "mlflow>=3.1.4",
+    "psutil>=7.0.0",
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
     "rich>=14.1.0",
     "scalar-fastapi>=1.2.2",
+    "supabase>=2.17.0",
     "toml>=0.10.2",
     "types-toml>=0.10.8.20240310",
 ]
@@ -33,16 +38,18 @@ dev = [
 line-length = 180
 target-version = 'py312'
 exclude = ['build', ]
-extend-ignore = [
-    "D203",  # Ignore: one-blank-line-before-class
-    "D213",  # Ignore: multi-line-summary-second-line
-]
 
 [tool.ruff.format]
 quote-style = "double"
 
 [tool.ruff.lint]
 select = ["ALL"]
+extend-ignore = [
+    "D203",  # Ignore: one-blank-line-before-class
+    "D213",  # Ignore: multi-line-summary-second-line
+    "S101"
+]
+
 
 ignore = []
 unfixable = ["B"]

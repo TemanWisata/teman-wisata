@@ -25,6 +25,20 @@ class SupabaseSettings(BaseSettings):
     )
 
 
+class OauthSettings(BaseSettings):
+    """OAuth configuration settings."""
+
+    secret_key: SecretStr | None = Field(default=None, description="The secret key for OAuth. From openssl rand -hex 32")
+    algorithm: str | None = Field(default=None, description="The algorithm used for OAuth.")
+    access_token_expire_minutes: float = Field(default=30.0, description="The expiration time for access tokens.")
+    model_config = SettingsConfigDict(
+        env_file=Utils.get_root_path().joinpath(".env"),
+        env_file_encoding="utf-8",
+        extra="allow",
+        case_sensitive=False,
+    )
+
+
 class Environment(Enum):
     """Enumeration for different environments."""
 
@@ -43,6 +57,7 @@ class Config(BaseSettings):
         extra="allow",
         case_sensitive=False,
     )
+    oauth: OauthSettings = Field(default_factory=OauthSettings, description="OAuth configuration settings.")
 
     @property
     def version(self) -> str:

@@ -1,11 +1,14 @@
 """Router for authentication-related endpoints."""
 
-from fastapi import APIRouter, Request
+from datetime import timedelta
+
+from fastapi import APIRouter, HTTPException, Request
 
 from app.api.v1.schema import APIResponse
-from app.auth.service import UserService
+from app.auth import LoginRequest, SignUpRequest, verify_bearer_token
+from app.auth.service import OauthService, UserService
+from app.core import CONFIG
 from app.infrastructure.di import SupabaseClientDependency
-from app.model import LoginRequest, SignUpRequest
 
 router = APIRouter(prefix="/auth")
 
@@ -20,8 +23,16 @@ async def register(request: Request, supabase: SupabaseClientDependency, user_da
 @router.post("/login")
 async def login(request: Request, supabase: SupabaseClientDependency, auth: LoginRequest) -> APIResponse:  # noqa: ARG001
     """Endpoint for user login."""
-    await UserService.authenticate_user(supabase, username=auth.username, password=auth.password.get_secret_value())
-    return APIResponse(success=True, message="User logged in successfully")
+    try:
+        user_data = await UserService.authenticate_user(supabase, username=auth.username, password=auth.password.get_secret_value())
+
+        if not user_data:
+            return APIResponse(success=False, message="Invalid username or password")
+
+        token = OauthService.create_bearer_token(auth, expires_in=timedelta(minutes=CONFIG.oauth.access_token_expire_minutes))
+        return APIResponse(success=True, message="User logged in successfully", data=token.model_dump())
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/logout")
@@ -30,5 +41,6 @@ async def logout() -> None:
 
 
 @router.get("/me")
-async def get_me() -> None:
+async def get_me(request: Request, verify_user: verify_bearer_token) -> APIResponse:  # noqa: ARG001
     """Endpoint for getting current user information."""
+    return APIResponse(success=True, message="User information retrieved successfully", data=verify_user.model_dump())

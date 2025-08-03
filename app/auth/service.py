@@ -1,12 +1,70 @@
 """Auth Service Module."""
 
-from argon2 import PasswordHasher  # noqa: I001
+from datetime import datetime, timedelta, UTC  # noqa: I001
+from typing import Annotated
+
+from argon2 import PasswordHasher
 from argon2.exceptions import HashingError, InvalidHashError, VerificationError, VerifyMismatchError
-from fastapi import HTTPException
+from fastapi import HTTPException, status, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import SecretStr, TypeAdapter
 from supabase import AsyncClient
+from authlib.jose import jwt, JoseError  # type: ignore  # noqa: PGH003
+from loguru import logger
 
-from app.model import User, SignUpRequest
+from app.model import User
+from app.auth.schema import SignUpRequest, LoginRequest, Token
+from app.core import CONFIG
+
+
+class OauthService:
+    """Service for handling OAuth-related operations."""
+
+    bearer_dependency = Annotated[HTTPAuthorizationCredentials, Depends(HTTPBearer())]
+
+    @staticmethod
+    def create_bearer_token(login_request: LoginRequest, expires_in: timedelta | None) -> Token:
+        """Create a bearer token for the user."""
+        try:
+            to_encode = login_request.model_dump()
+            to_encode.pop("password", None)  # Remove password from payload
+            now = int(datetime.now(UTC).timestamp())
+            expire = datetime.now(UTC) + (expires_in or timedelta(minutes=CONFIG.oauth.access_token_expire_minutes))  # type: ignore  # noqa: PGH003
+            to_encode.update({"exp": int(expire.timestamp()), "iat": now, "nbf": now})
+
+            header = {"alg": CONFIG.oauth.algorithm}
+            encoded_jwt = jwt.encode(header, to_encode, CONFIG.oauth.secret_key.get_secret_value())  # type: ignore  # noqa: PGH003
+            return Token(
+                access_token=SecretStr(encoded_jwt.decode("utf-8") if isinstance(encoded_jwt, bytes) else encoded_jwt),
+            )
+
+        except JoseError as e:
+            logger.error(f"Error creating token: {e}")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error creating token") from e
+        except Exception as e:
+            exception_message = f"An unexpected error occurred during token creation: {e}"
+            logger.error(exception_message)
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exception_message) from e
+
+    @staticmethod
+    async def verify_bearer_token(supabase: AsyncClient, credential: HTTPAuthorizationCredentials) -> User:
+        """Verify the bearer token and return the user."""
+        try:
+            token = credential.credentials
+            logger.debug(f"Token received for verification: {token}")
+            claims = jwt.decode(token, CONFIG.oauth.secret_key.get_secret_value())  # type: ignore  # noqa: PGH003
+            claims.validate()  # This checks exp, nbf, etc.
+            username = claims.get("username")
+            if not username:
+                logger.error("Invalid token payload: 'username' not found")
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")  # noqa: TRY301
+            return await UserService.get_user_by_username(supabase=supabase, username=username)
+        except JoseError as e:
+            logger.error(f"Invalid or expired token: {e}")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token") from e
+        except Exception as e:
+            exception_message = f"An unexpected error occurred during token verification: {e}"
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exception_message) from e
 
 
 class AuthPasswordService:
@@ -86,8 +144,18 @@ class UserService:
             raise HTTPException(status_code=500, detail=exception_message) from e
 
     @staticmethod
-    async def get_user_by_id(supabase: AsyncClient, user_id: str) -> None:
-        """Get a user by user ID."""
+    async def get_user_by_username(supabase: AsyncClient, username: str) -> User:
+        """Get a user by username."""
+        try:
+            user = await supabase.table("users").select("*").eq("username", username).execute()
+            if not user.data:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")  # noqa: TRY301
+            return TypeAdapter(User).validate_python(user.data[0])
+        except HTTPException as e:
+            raise HTTPException(status_code=e.status_code, detail=e.detail) from e
+        except Exception as e:
+            exception_message = f"An unexpected error occurred while fetching the user: {e}"
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exception_message) from e
 
     @staticmethod
     async def delete_user() -> None:

@@ -40,7 +40,7 @@ class LoginRequest(BaseModel):
 class Token(BaseModel):
     """Model for authentication token."""
 
-    access_token: SecretStr = Field(description="Access token for the user.")
+    access_token: str = Field("access_token", description="Access token for the user.")
     token_type: Literal["bearer"] | None = Field(default="bearer", description="Type of the token, usually 'bearer'.")
 
     def model_dump(self, *args, **kwargs) -> dict:  # noqa: ANN002, ANN003

@@ -7,7 +7,7 @@ from argon2 import PasswordHasher
 from argon2.exceptions import HashingError, InvalidHashError, VerificationError, VerifyMismatchError
 from fastapi import HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import SecretStr, TypeAdapter
+from pydantic import SecretStr, TypeAdapter, UUID4
 from supabase import AsyncClient
 from authlib.jose import jwt, JoseError  # type: ignore  # noqa: PGH003
 from loguru import logger
@@ -35,7 +35,7 @@ class OauthService:
             header = {"alg": CONFIG.oauth.algorithm}
             encoded_jwt = jwt.encode(header, to_encode, CONFIG.oauth.secret_key.get_secret_value())  # type: ignore  # noqa: PGH003
             return Token(
-                access_token=SecretStr(encoded_jwt.decode("utf-8") if isinstance(encoded_jwt, bytes) else encoded_jwt),
+                access_token=encoded_jwt.decode("utf-8") if isinstance(encoded_jwt, bytes) else encoded_jwt,
             )
 
         except JoseError as e:
@@ -158,5 +158,12 @@ class UserService:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exception_message) from e
 
     @staticmethod
-    async def delete_user() -> None:
+    async def delete_user(supabase: AsyncClient, uuid: UUID4) -> None:
         """Delete a user by user ID."""
+        try:
+            deleted_at = datetime.now(UTC).isoformat()
+            await supabase.table("users").update({"deleted_at": deleted_at}).eq("id", uuid).execute()
+            logger.success(f"User with ID {uuid} soft deleted successfully")
+        except Exception as e:
+            exception_message = f"An unexpected error occurred while deleting the user: {e}"
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exception_message) from e

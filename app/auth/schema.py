@@ -9,11 +9,11 @@ from pydantic import BaseModel, Field, SecretStr
 class SignUpRequest(BaseModel):
     """Request model for user sign-up."""
 
-    username: str = Field(description="Username for the new user.")
-    password: SecretStr = Field(description="Password for the new user.")
-    dob: date = Field(description="Date of birth of the new user. Format: YYYY-MM-DD")
-    full_name: str | None = Field(default=None, description="Full name of the new user.")
-    province: str = Field(description="Province of the new user.")
+    username: str = Field("Yourusername", description="Username for the new user.")
+    password: SecretStr = Field(SecretStr("Yourpassword"), description="Password for the new user.")
+    dob: date = Field(default=date(2000, 1, 1), description="Date of birth of the new user. Format: YYYY-MM-DD")
+    full_name: str | None = Field(default="Your Full Name", description="Full name of the new user.")
+    province: str = Field("Your Province", description="Province of the new user.")
 
     def set_hashed_password(self, hashed_password: str) -> None:
         """Set the hashed password for the user."""

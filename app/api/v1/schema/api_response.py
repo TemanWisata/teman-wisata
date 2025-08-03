@@ -2,15 +2,16 @@
 
 from typing import TypeVar
 
+from fastapi import status
 from pydantic import BaseModel, Field
-from pydantic.generics import GenericModel
 
 DataT = TypeVar("DataT", bound=BaseModel)
 
 
-class APIResponse[DataT: BaseModel](GenericModel):
+class APIResponse[DataT: BaseModel](BaseModel):
     """Base schema for API responses."""
 
     success: bool = Field(..., description="Indicates if the request was successful")
+    http_status: int = Field(status.HTTP_200_OK, description="HTTP status code of the response")
     message: str = Field(..., description="Response message")
     data: DataT | None = Field(default=None, description="Response data, if any")

@@ -1,19 +1,20 @@
-FROM python:3.12-alpine
+FROM python:3.12-slim
 
-# Download the latest installer
+RUN apt-get update && apt-get install -y gcc g++ python3-dev build-essential curl
+
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
-
-# Run the installer then remove it
 RUN sh /uv-installer.sh && rm /uv-installer.sh
 
-# Ensure the installed binary is on the `PATH`
 ENV PATH="/root/.local/bin/:$PATH"
-
-
-ADD . /app
+ENV UV_COMPILE_BYTECODE=0
 
 WORKDIR /app
-RUN uv sync --locked
 
+COPY pyproject.toml ./
+COPY uv.lock ./
+RUN uv lock
+RUN uv sync
 
-CMD ["uv","run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY . /app
+
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

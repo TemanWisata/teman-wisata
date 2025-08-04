@@ -2,6 +2,14 @@
 
 Teman Wisata Version List 🚀
 
+## v0.2.1 (2025-08-04)
+
+### Bug Fixes
+
+- Add docker stop command and -d args in docker run
+  ([`ff9e414`](https://github.com/TemanWisata/teman-wisata/commit/ff9e414e51dfe9ecb70bd9c3edb046f1cc850397))
+
+
 ## v0.2.0 (2025-08-04)
 
 ### Features

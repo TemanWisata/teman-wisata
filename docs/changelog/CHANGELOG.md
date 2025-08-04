@@ -2,6 +2,15 @@
 
 Teman Wisata Version List 🚀
 
+## v0.2.0 (2025-08-04)
+
+### Features
+
+- Add Docker support; implement docker build and run commands in Makefile and update Dockerfile for
+  slim image
+  ([`8e07220`](https://github.com/TemanWisata/teman-wisata/commit/8e072204f7fa7e4c8f960c0cb85ca72911cd53ce))
+
+
 ## v0.1.0 (2025-08-03)
 
 ### Chores

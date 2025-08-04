@@ -18,3 +18,9 @@ setup-ui:
 
 run:
 	uv run main.py
+
+docker-build:
+	docker build -t teman-wisata -f deployment/docker/Dockerfile .
+
+docker-run:
+	docker run -p 8000:8000 teman-wisata

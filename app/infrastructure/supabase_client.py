@@ -11,6 +11,19 @@ class SupabaseClient:
     client: AsyncClient | None = None
 
     @classmethod
+    async def test_connection(cls) -> bool:
+        """Test the Supabase connection."""
+        try:
+            if cls.client is None:
+                return False
+
+            response = await cls.client.table("place").select("*").limit(1).execute()
+        except Exception as e:  # noqa: BLE001
+            logger.error(f"Supabase connection test failed: {e}")
+            return False
+        return response.data is not None
+
+    @classmethod
     async def setup(cls, url: str | None, key: str | None) -> None:
         """Set up the Supabase client with the provided URL and key."""
         if url is None or key is None:

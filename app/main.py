@@ -69,9 +69,11 @@ async def read_root() -> JSONResponse:
 @app.get("/health", tags=["health"])
 async def check_health() -> JSONResponse:
     """Health check endpoint."""
+    is_supabase_healthy = await SupabaseClient.test_connection()
+    is_healthy = "healthy" if all([is_supabase_healthy]) else "unhealthy"
     return JSONResponse(
         content={
-            "status": "healthy",
+            "status": is_healthy,
             "version": CONFIG.version,
             "environment": CONFIG.environment.name,
             "cpu_count": cpu_count(logical=True),

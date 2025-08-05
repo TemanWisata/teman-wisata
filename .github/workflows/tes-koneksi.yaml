@@ -14,7 +14,7 @@ jobs:
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
-          key: ${{ secrets.VM_SSH_KEY }}
+          key: ${{ secrets.VM_PRIVATE_KEY }}
           script: |
             echo "Hello from GitHub Actions at $(date)" > hello.txt
             cat hello.txt

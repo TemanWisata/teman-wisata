@@ -2367,7 +2367,9 @@ wheels = [
 
 [[package]]
 name = "teman-wisata"
+
 version = "0.2.1"
+
 source = { virtual = "." }
 dependencies = [
     { name = "argon2-cffi" },

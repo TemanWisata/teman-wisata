@@ -20,5 +20,5 @@ run:
 	uv run main.py
 
 nerdctl-build:
-	nerdctl --address /run/k3s/containerd/containerd.sock build -t teman-wisata -f deployment/docker/Dockerfile .
+	nerdctl --address /run/k3s/containerd/containerd.sock build -t teman-wisata -f deployment/docker/Dockerfile --namespace k8s.io .
 

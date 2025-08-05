@@ -1,47 +1,64 @@
 """Module for Place API Service."""
 
 from collections import defaultdict  # noqa: I001
-
+from typing import Any
 from fastapi import HTTPException, status
 from pydantic import TypeAdapter
 from supabase import AsyncClient
-
+from postgrest.base_request_builder import BaseFilterRequestBuilder
+from postgrest.types import CountMethod
 from app.core.utils import Utils
 from app.model import Place
-from app.place.schema import PlaceFilter, TopPlaceByCategory, TopPlaceByProvince, TopPlaceRating
+from app.place.schema import PlaceFilter, TopPlaceByCategory, TopPlaceByProvince, TopPlaceRating, PaginationResponse, PlaceResponse
 
 
 class PlaceService:
     """Service class for handling Place-related operations."""
 
-    @staticmethod
-    async def get_all_places(supabase: AsyncClient, limit: int = 20, page: int = 1, query_filter: PlaceFilter | None = None) -> list[Place]:
+    @classmethod
+    async def get_all_places(cls, supabase: AsyncClient, limit: int = 20, page: int = 1, query_filter: PlaceFilter | None = None) -> PlaceResponse:
         """Get all places."""
         offset = (page - 1) * limit
-        query = supabase.from_("places").select("*")
-        if query_filter:
-            if query_filter.category:
-                query = query.eq("category", query_filter.category.value)
-            if query_filter.province:
-                query = query.eq("province", query_filter.province)
-            if query_filter.min_price is not None:
-                query = query.gte("price", query_filter.min_price)
-            if query_filter.max_price is not None:
-                query = query.lte("price", query_filter.max_price)
-            if query_filter.min_rating is not None:
-                query = query.gte("rating", query_filter.min_rating)
-            if query_filter.max_rating is not None:
-                query = query.lte("rating", query_filter.max_rating)
+        base_query = supabase.from_("place").select("*")
+        filter_query = cls._apply_filters(base_query, query_filter)
+        count_query = cls._apply_filters(supabase.from_("place").select("*", count=CountMethod.exact), query_filter)
+        count_response = await count_query.execute()
+        total_records = count_response.count or 0
+        total_page = (total_records + limit - 1) // limit
+        response = await filter_query.range(offset, offset + limit - 1).execute()
+        places = TypeAdapter(list[Place]).validate_python(response.data) if response.data else []
+        return PlaceResponse(data=places, pagination=PaginationResponse(total=total_page, has_next=len(places) == limit, has_prev=page > 1, page=page, limit=limit))
 
-        response = await query.range(offset, offset + limit - 1).execute()
-        if response.data:
-            return TypeAdapter(list[Place]).validate_python(response.data)
-        return []
+    @classmethod
+    def _apply_filters(cls, query: BaseFilterRequestBuilder, query_filter: PlaceFilter | None) -> Any:  # noqa: ANN401
+        """Apply filters to query in a centralized way."""
+        if not query_filter:
+            return query
+
+        filter_mappings = [
+            (query_filter.category, "category", "eq", query_filter.category.value if query_filter.category else None),
+            (query_filter.province, "province", "eq", query_filter.province),
+            (query_filter.min_price, "price", "gte", query_filter.min_price),
+            (query_filter.max_price, "price", "lte", query_filter.max_price),
+            (query_filter.min_rating, "rating", "gte", query_filter.min_rating),
+            (query_filter.max_rating, "rating", "lte", query_filter.max_rating),
+        ]
+
+        for condition, field, operator, value in filter_mappings:
+            if condition is not None:
+                if operator == "eq":
+                    query = query.eq(field, value)
+                elif operator == "gte":
+                    query = query.gte(field, value)
+                elif operator == "lte":
+                    query = query.lte(field, value)
+
+        return query
 
     @staticmethod
     async def get_place_by_id(supabase: AsyncClient, place_id: str) -> Place:
         """Get a place by its ID."""
-        response = await supabase.from_("places").select("*").eq("id", place_id).single().execute()
+        response = await supabase.from_("place").select("*").eq("id", place_id).single().execute()
         if response.data:
             return TypeAdapter(Place).validate_python(response.data)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Place not found")

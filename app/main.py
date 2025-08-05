@@ -11,7 +11,7 @@ from loguru import logger
 from psutil import cpu_count, cpu_percent, virtual_memory  # type: ignore  # noqa: PGH003
 from scalar_fastapi import get_scalar_api_reference  # type: ignore  # noqa: PGH003
 
-from app.api.v1 import auth_router
+from app.api.v1 import auth_router, place_router
 from app.core import CONFIG
 from app.infrastructure import SupabaseClient
 
@@ -52,6 +52,7 @@ app = FastAPI(
 
 
 app.include_router(auth_router, prefix="/api/v1", tags=["auth"])
+app.include_router(place_router, prefix="/api/v1", tags=["place"])
 
 
 @app.get("/", include_in_schema=False)

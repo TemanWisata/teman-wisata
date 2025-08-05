@@ -2,18 +2,16 @@
 
 from pydantic import UUID4, BaseModel, Field
 
-from app.model import CategoryEnum
+from app.model import CategoryEnum, Place
 
 
 class PlaceFilter(BaseModel):
     """Schema for filtering places."""
 
     category: CategoryEnum | None = Field(
-        default=None,
         description="Category of the place, e.g., 'Budaya', 'Taman Hiburan', etc.",
     )
     min_price: float | None = Field(
-        default=None,
         description="Minimum price of the place.",
     )
     max_price: float | None = Field(
@@ -30,9 +28,21 @@ class PlaceFilter(BaseModel):
     )
 
     province: str | None = Field(
-        default=None,
         description="Province where the place is located.",
     )
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "category": None,
+                "min_price": None,
+                "max_price": None,
+                "min_rating": None,
+                "max_rating": None,
+                "province": None,
+            },
+        },
+    }
 
 
 class TopPlaceRating(BaseModel):
@@ -69,4 +79,68 @@ class TopPlaceByCategory(BaseModel):
     category: CategoryEnum = Field(description="Category of the places.")
     data: list[TopPlaceRating] = Field(
         description="List of top places in the specified category.",
+    )
+
+
+class AllPlaceRequest(BaseModel):
+    """Schema for all places request."""
+
+    query_filter: PlaceFilter | None = Field(
+        default=None,
+        description="Filter criteria for fetching places.",
+    )
+    page: int = Field(
+        default=1,
+        ge=1,
+        description="Page number for pagination.",
+    )
+    limit: int = Field(
+        default=10,
+        ge=1,
+        le=100,
+        description="Number of places to return per page.",
+    )
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "query_filter": None,
+                "page": 1,
+                "limit": 10,
+            },
+        },
+    }
+
+
+class PaginationResponse(BaseModel):
+    """Schema for pagination response."""
+
+    total: int = Field(description="Total number of places available.")
+    page: int = Field(description="Current page number.")
+    has_next: bool = Field(
+        description="Indicates if there is a next page.",
+    )
+    has_prev: bool = Field(
+        description="Indicates if there is a previous page.",
+    )
+    next_page: int | None = Field(
+        default=None,
+        description="Next page number if available.",
+    )
+    limit: int = Field(
+        default=10,
+        ge=1,
+        le=100,
+        description="Number of places to return per page.",
+    )
+
+
+class PlaceResponse(BaseModel):
+    """Schema for place response."""
+
+    data: list[Place] = Field(
+        description="Data of the place.",
+    )
+    pagination: PaginationResponse = Field(
+        description="Pagination information for the response.",
     )

@@ -25,11 +25,11 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Install Supabase CLI
-        run: npm install -g supabase
+
 
       - name: Start Supabase
-        run: npx supabase start
+        run: npx supabase@latest start
+
 
       - name: Wait for Supabase to be ready
         run: sleep 10
@@ -41,10 +41,10 @@ jobs:
           echo "SUPABASE_KEY=$SUPABASE_ANON_KEY" >> $GITHUB_ENV
 
       - name: Reset and migrate database
-        run: npx supabase db reset
+        run: npx supabase@latest db reset
 
       - name: Run tests with pytest
         run: uv run pytest . -s -vv
 
       - name: Stop Supabase
-        run: npx supabase stop
+        run: npx supabase@latest stop

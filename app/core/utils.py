@@ -18,3 +18,15 @@ class Utils:
         """Retrieve the project version from pyproject.toml."""
         data = toml.load("pyproject.toml")
         return data["project"]["version"]
+
+    @staticmethod
+    def load_sql_file(sql_file: str | Path) -> str:
+        """Load SQL file content."""
+        if isinstance(sql_file, str):
+            sql_file = Path(sql_file)
+
+        if not sql_file.exists():
+            msg = f"SQL file {sql_file} not found."
+            raise FileNotFoundError(msg)
+        with sql_file.open() as file:
+            return file.read()

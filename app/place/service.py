@@ -1,11 +1,14 @@
 """Module for Place API Service."""
 
+from collections import defaultdict  # noqa: I001
+
 from fastapi import HTTPException, status
 from pydantic import TypeAdapter
-
-from app.model import Place
-from app.place.schema import PlaceFilter
 from supabase import AsyncClient
+
+from app.core.utils import Utils
+from app.model import Place
+from app.place.schema import PlaceFilter, TopPlaceByCategory, TopPlaceByProvince, TopPlaceRating
 
 
 class PlaceService:
@@ -42,3 +45,53 @@ class PlaceService:
         if response.data:
             return TypeAdapter(Place).validate_python(response.data)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Place not found")
+
+    @staticmethod
+    async def get_top_places(supabase: AsyncClient, limit: int = 10) -> list[TopPlaceRating]:
+        """Get top places based on rating."""
+        query = Utils.load_sql_file("./app/place/query/top_place_rating.sql").format(limit=limit)
+        if not query:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="SQL query not found")
+
+        response = await supabase.rpc("execute_sql", {"sql": query}).execute()
+
+        if response.data:
+            return TypeAdapter(list[TopPlaceRating]).validate_python(response.data)
+        return []
+
+    @staticmethod
+    async def get_top_places_by_province(supabase: AsyncClient, limit: int = 10) -> list[TopPlaceByProvince]:
+        """Get top places based on rating."""
+        query = Utils.load_sql_file("./app/place/query/top_place_by_province.sql").format(limit=limit)
+        if not query:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="SQL query not found")
+
+        response = await supabase.rpc("execute_sql", {"sql": query}).execute()
+        grouped = defaultdict(list)
+        if response.data:
+            for item in response.data:
+                grouped[item["province"]].append(item)
+            result = [{"province": province, "data": grouped_data} for province, grouped_data in grouped.items()]
+            return TypeAdapter(list[TopPlaceByProvince]).validate_python(result)
+        return []
+
+    @staticmethod
+    async def get_top_places_by_category(supabase: AsyncClient, limit: int = 10) -> list[TopPlaceByCategory]:
+        """Get top places based on rating."""
+        query = Utils.load_sql_file("./app/place/query/top_place_by_category.sql").format(limit=limit)
+        if not query:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="SQL query not found")
+
+        response = await supabase.rpc("execute_sql", {"sql": query}).execute()
+        grouped = defaultdict(list)
+        if response.data:
+            for item in response.data:
+                grouped[item["category"]].append(item)
+            result = [{"category": category, "data": grouped_data} for category, grouped_data in grouped.items()]
+            return TypeAdapter(list[TopPlaceByCategory]).validate_python(result)
+        return []
+
+    @staticmethod
+    async def upsert_place_rating(supabase: AsyncClient, user_id: str, place_id: int, rating: float) -> None:
+        """Upsert place rating for a user."""
+        await supabase.from_("user_place_rating").upsert({"user_id": user_id, "place_id": place_id, "rating": rating}).execute()

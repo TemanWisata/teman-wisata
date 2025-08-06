@@ -62,4 +62,4 @@ body:
     attributes:
       label: "📎 Additional Context"
       description: "Add any other context or screenshots about the PR here"
-      placeholder: "Any additional information, screenshots, or context..."
+      placeholder: "Any additional information, screenshots, or context...."

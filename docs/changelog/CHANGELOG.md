@@ -2,6 +2,22 @@
 
 Teman Wisata Version List 🚀
 
+## v0.3.0 (2025-08-06)
+
+### Bug Fixes
+
+- Add docker stop command and -d args in docker run
+  ([`e7f0388`](https://github.com/TemanWisata/teman-wisata/commit/e7f0388f8f8215766099cf8157ac8d6749de53d4))
+
+### Features
+
+- Enhance Place API with filtering and pagination; update Supabase CLI commands
+  ([`b6bfd6f`](https://github.com/TemanWisata/teman-wisata/commit/b6bfd6f20e0f19d77b672b9985f3d48754b34a77))
+
+- Implement place query and rating
+  ([`5e7f173`](https://github.com/TemanWisata/teman-wisata/commit/5e7f173b979f7a28e6a72ff9c8277e5401f8bb24))
+
+
 ## v0.2.1 (2025-08-04)
 
 ### Bug Fixes

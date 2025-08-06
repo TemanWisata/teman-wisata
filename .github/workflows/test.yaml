@@ -13,9 +13,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Install uv
         uses: astral-sh/setup-uv@v6
+
       - name: Install dependencies
         run: uv sync
+
+      # - name: Start Supabase
+      #   run: npx supabase@latest start
+
+      # - name: Wait for Supabase to be ready
+      #   run: sleep 10
+
+      # - name: Export Supabase URL and Key
+      #   run: |
+      #     source .supabase/.env
+      #     echo "SUPABASE_URL=$SUPABASE_URL" >> $GITHUB_ENV
+      #     echo "SUPABASE_KEY=$SUPABASE_ANON_KEY" >> $GITHUB_ENV
+
+      # - name: Reset and migrate database
+      #   run: npx supabase@latest db reset
+
       - name: Run tests with pytest
         run: uv run pytest . -s -vv
+
+      - name: Stop Supabase
+        run: npx supabase@latest stop

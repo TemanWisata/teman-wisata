@@ -22,3 +22,8 @@ run:
 nerdctl-build:
 	nerdctl --address /run/k3s/containerd/containerd.sock build -t teman-wisata -f deployment/docker/Dockerfile --namespace k8s.io .
 
+docker-run:
+	docker run -d --name teman-wisata-app -p 8000:8000 teman-wisata
+
+docker-stop:
+	docker stop teman-wisata-app

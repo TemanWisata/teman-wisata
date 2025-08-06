@@ -1,6 +1,6 @@
 create table if not exists public.place (
     id uuid primary key default gen_random_uuid(),
-    place_id int unique not null,
+    place_id serial unique not null,
     place_name text not null,
     description text not null,
     category text not null,

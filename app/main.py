@@ -11,7 +11,7 @@ from loguru import logger
 from psutil import cpu_count, cpu_percent, virtual_memory  # type: ignore  # noqa: PGH003
 from scalar_fastapi import get_scalar_api_reference  # type: ignore  # noqa: PGH003
 
-from app.api.v1 import auth_router
+from app.api.v1 import auth_router, place_router
 from app.core import CONFIG
 from app.infrastructure import SupabaseClient
 
@@ -52,6 +52,7 @@ app = FastAPI(
 
 
 app.include_router(auth_router, prefix="/api/v1", tags=["auth"])
+app.include_router(place_router, prefix="/api/v1", tags=["place"])
 
 
 @app.get("/", include_in_schema=False)
@@ -69,9 +70,11 @@ async def read_root() -> JSONResponse:
 @app.get("/health", tags=["health"])
 async def check_health() -> JSONResponse:
     """Health check endpoint."""
+    is_supabase_healthy = await SupabaseClient.test_connection()
+    is_healthy = "healthy" if all([is_supabase_healthy]) else "unhealthy"
     return JSONResponse(
         content={
-            "status": "healthy",
+            "status": is_healthy,
             "version": CONFIG.version,
             "environment": CONFIG.environment.name,
             "cpu_count": cpu_count(logical=True),

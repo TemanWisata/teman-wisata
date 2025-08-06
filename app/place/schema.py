@@ -64,12 +64,30 @@ class TopPlaceRating(BaseModel):
     )
 
 
+class ResponseTopPlaceRating(BaseModel):
+    """Schema for response of top place rating."""
+
+    places: list[TopPlaceRating] | list = Field(
+        default=[],
+        description="List of top places with their ratings.",
+    )
+
+
 class TopPlaceByProvince(BaseModel):
     """Schema for top places by province."""
 
     province: str = Field(description="Province where the places are located.")
-    data: list[TopPlaceRating] = Field(
+    places: list[TopPlaceRating] = Field(
         description="List of top places in the specified province.",
+    )
+
+
+class ResponseTopPlaceByProvince(BaseModel):
+    """Schema for response of top places by province."""
+
+    data: list[TopPlaceByProvince] | list = Field(
+        default=[],
+        description="List of top places grouped by province.",
     )
 
 
@@ -77,8 +95,17 @@ class TopPlaceByCategory(BaseModel):
     """Schema for top places by category."""
 
     category: CategoryEnum = Field(description="Category of the places.")
-    data: list[TopPlaceRating] = Field(
+    places: list[TopPlaceRating] = Field(
         description="List of top places in the specified category.",
+    )
+
+
+class ResponseTopPlaceByCategory(BaseModel):
+    """Schema for response of top places by category."""
+
+    data: list[TopPlaceByCategory] | list = Field(
+        default=[],
+        description="List of top places grouped by category.",
     )
 
 
@@ -135,12 +162,34 @@ class PaginationResponse(BaseModel):
     )
 
 
-class PlaceResponse(BaseModel):
+class ResponsePlace(BaseModel):
     """Schema for place response."""
 
-    data: list[Place] = Field(
+    places: list[Place] = Field(
         description="Data of the place.",
     )
     pagination: PaginationResponse = Field(
         description="Pagination information for the response.",
     )
+
+
+class UserRating(BaseModel):
+    """Schema for user rating of a place."""
+
+    user_id: int = Field(description="Unique identifier for the user.")
+    place_id: int = Field(description="Unique identifier for the place.")
+    rating: float = Field(
+        ge=0.0,
+        le=5.0,
+        description="Rating given by the user, between 0 and 5.",
+    )
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "user_id": 1,
+                "place_id": 1,
+                "rating": 4.5,
+            },
+        },
+    }

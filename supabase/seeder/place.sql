@@ -517,3 +517,15 @@ insert into public.place (
 (436, 'Taman Flora Bratang Surabaya', 'Taman Flora adalah salah satu taman kota di Surabaya yang merupakan fasilitas publik dari Pemkot setempat. Sehingga tempat ini memang sengaja dibuat untuk dinikmati oleh khalayak umum. Karena taman ini merupakan fasilitas publik yang didirikan oleh Pemkot Surabaya maka bagi siapa saja jika ingin memanfaatkan taman kota ini tidak perlu membayar tiket masuk alias gratis.', 'Taman Hiburan', 'Surabaya', 0, 4.6, NULL, -7.2943303, 112.7617534),
 (437, 'Gereja Perawan Maria Tak Berdosa Surabaya', 'Gereja Katolik Kelahiran Santa Perawan Maria merupakan salah satu gereja tua di kota Surabaya, Jawa Timur, Indonesia. Berlokasi di Jalan Kepanjen, Surabaya, bangunan religius ini berdampingan dengan gedung SMA Katolik Frateran Surabaya.
 ', 'Tempat Ibadah', 'Surabaya', 10000, 4.8, NULL, -7.2420758, 112.7368158);
+
+
+SELECT
+  setval(
+    'place_place_id_seq',
+    (
+      SELECT
+        MAX(place_id)
+      FROM
+        public.place
+    )
+  );

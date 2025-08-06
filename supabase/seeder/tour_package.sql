@@ -406,3 +406,15 @@ insert into public.tour_package (
 (98, 436),
 (99, 435),
 (100, 432);
+
+
+SELECT
+  setval(
+    'tour_package_tour_package_id_seq',
+    (
+      SELECT
+        MAX(tour_package_id)
+      FROM
+        public.tour_package
+    )
+  );

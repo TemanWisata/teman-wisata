@@ -1,22 +1,17 @@
+import js from '@eslint/js';
 import globals from 'globals';
-import tsParser from '@typescript-eslint/parser';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import { configs } from '@typescript-eslint/eslint-plugin';
-import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint';
 
-export default defineConfig([
+export default tseslint.config(
+  { ignores: ['dist'] },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    files: ['**/*.{ts,tsx,mts,cts}'],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      parser: tsParser,
-      parserOptions: {
-        project: './tsconfig.json',
-      },
+      ecmaVersion: 2020,
       globals: globals.browser,
     },
-    plugins: { '@typescript-eslint': tseslint },
-    rules: {
-      ...configs.recommended.rules,
-    },
-  },
-]);
+    plugins: {},
+  }
+);

@@ -8,8 +8,8 @@ import toml
 class Utils:
     """Utility class for core functionalities."""
 
-    @staticmethod
-    def get_root_path() -> Path:
+    @classmethod
+    def get_root_path(cls) -> Path:
         """Get the root path of the project."""
         return Path(__file__).parent.parent.parent.resolve()
 
@@ -30,3 +30,15 @@ class Utils:
             raise FileNotFoundError(msg)
         with sql_file.open() as file:
             return file.read()
+
+    @classmethod
+    def get_static_path(cls) -> Path:
+        """Get the static files path."""
+        static_path = cls.get_root_path().joinpath("ui", "dist")
+        if not static_path.exists():
+            msg = f"Static path {static_path} does not exist."
+            raise FileNotFoundError(msg)
+        if not static_path.is_dir():
+            msg = f"Static path {static_path} is not a directory."
+            raise NotADirectoryError(msg)
+        return static_path

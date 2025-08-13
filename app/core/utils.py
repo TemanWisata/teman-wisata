@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import toml
+from loguru import logger
 
 
 class Utils:
@@ -37,8 +38,10 @@ class Utils:
         static_path = cls.get_root_path().joinpath("ui", "dist")
         if not static_path.exists():
             msg = f"Static path {static_path} does not exist."
+            logger.error(msg)
             raise FileNotFoundError(msg)
         if not static_path.is_dir():
             msg = f"Static path {static_path} is not a directory."
+            logger.error(msg)
             raise NotADirectoryError(msg)
         return static_path

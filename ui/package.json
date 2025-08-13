@@ -4,6 +4,7 @@
     "alpinejs": "^3.14.9",
     "axios": "^1.11.0",
     "daisyui": "^5.0.47",
+    "handlebars-layouts": "^3.1.4",
     "htmx.org": "^2.0.6",
     "tailwindcss": "^4.1.11"
   },

@@ -1,0 +1,38 @@
+name: build-image
+
+on:
+  push:
+    branches:
+      - k3s-dev
+    paths:
+      - "k3s-manifest/simulasi-workflow/docker/**"
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Tentukan TAG
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "release" ]]; then
+            echo "TAG=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+          else
+            echo "TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          fi
+          echo "Tag yang akan dipakai: ${{ env.TAG }}"
+
+      - name: SSH & Build image di VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.VM_PROJECT_PATH }}/k3s-manifest/simulasi-workflow/docker
+            sudo nerdctl --address /run/k3s/containerd/containerd.sock \
+              build -t teman-wisata:${{ env.TAG }} -f Dockerfile --namespace k8s.io .
+            echo "${{ env.TAG }}" > ${{ secrets.VM_PROJECT_PATH }}/.image-tag

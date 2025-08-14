@@ -1,0 +1,25 @@
+name: update-deployment
+
+on:
+  workflow_run:
+    workflows: ["build-image"]
+    types:
+      - completed
+
+jobs:
+  update:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update manifest di VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.VM_PROJECT_PATH }}/k3s-manifest/simulasi-workflow/app
+            TAG=$(cat ${{ secrets.VM_PROJECT_PATH }}/.image-tag)
+            sed -i "s|image: teman-wisata:.*|image: teman-wisata:${TAG}|" nginx-deploy.yaml
+            kubectl apply -f nginx-deploy.yaml
+            kubectl rollout status deployment/nginx-deploy -n default

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-temanwisata
+  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: teman-wisata
+  template:
+    metadata:
+      labels:
+        app: teman-wisata
+    spec:
+      containers:
+        - name: teman-wisata
+          image: teman-wisata:latest   # image hasil build nerdctl
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000      # sesuaikan dengan expose port di Dockerfile
+          # kamu bisa comment env jika model belum tersedia
+          env:
+          #   - name: MODEL_URI
+          #     value: ""
+            - name: SUPABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-secret
+                  key: url
+            - name: SUPABASE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-secret
+                  key: api_key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-fastapi
+  namespace: backend
+spec:
+  selector:
+    app: teman-wisata
+  ports:
+    - port: 80
+      targetPort: 8000

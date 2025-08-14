@@ -1,0 +1,13 @@
+tenants:
+  - name: myminio
+    namespace: minio-operator
+    credsSecret:
+      name: myminio-secret
+    pools:
+      - name: pool-0
+        servers: 1
+        volumesPerServer: 1
+        size: 5Gi
+        storageClassName: local-path
+    mountPath: /export
+    requestAutoCert: true

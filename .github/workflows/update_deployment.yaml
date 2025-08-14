@@ -1,16 +1,21 @@
 name: update-deployment
 
 on:
+  workflow_dispatch: {}         # 🔴 Tambahan: bisa run manual dari GitHub UI
   workflow_run:
-    workflows: ["build-image"]
+    workflows: ["build-image"]  # tetap boleh auto jika build-image sukses
     types:
       - completed
 
 jobs:
   update:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Debug event (opsional)
+        run: |
+          echo "event_name=${{ github.event_name }}"
+          echo "branch_ref=${{ github.ref }}"
       - name: Update manifest di VM
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -18,8 +23,21 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_PRIVATE_KEY }}
           script: |
-            cd ${{ secrets.VM_PROJECT_PATH }}/k3s-manifest/simulasi-workflow/app
+            # pastikan file tag hasil build sudah ada
+            if [ ! -f "${{ secrets.VM_PROJECT_PATH }}/.image-tag" ]; then
+              echo "ERROR: .image-tag tidak ditemukan. Jalankan workflow build-image dulu."
+              exit 1
+            fi
             TAG=$(cat ${{ secrets.VM_PROJECT_PATH }}/.image-tag)
+            echo "TAG yang dipakai: ${TAG}"
+
+            cd ${{ secrets.VM_PROJECT_PATH }}/k3s-manifest/simulasi-workflow/app
+            # update image di manifest
             sed -i "s|image: teman-wisata:.*|image: teman-wisata:${TAG}|" nginx-deploy.yaml
+
+            # apply ke cluster dan tunggu rollout
             kubectl apply -f nginx-deploy.yaml
-            kubectl rollout status deployment/nginx-deploy -n default
+            kubectl rollout status deployment/nginx-deploy -n default --timeout=120s
+
+            # info tambahan
+            kubectl get pods -n default -l app=nginx -o wide

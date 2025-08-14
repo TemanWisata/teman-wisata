@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import ValidationError
 
 from app.api.v1.schema.api_response import APIResponse
+from app.auth import verify_bearer_token
 from app.infrastructure.di import SupabaseClientDependency
 from app.model import Place
 from app.place import AllPlaceRequest, PlaceService, ResponsePlace, ResponseTopPlaceByCategory, ResponseTopPlaceByProvince, ResponseTopPlaceRating, UserRating
@@ -12,7 +13,7 @@ router = APIRouter(prefix="/place")
 
 
 @router.post("/")
-async def get_places(request: Request, supabase_client: SupabaseClientDependency, api_request: AllPlaceRequest) -> APIResponse[ResponsePlace]:  # noqa: ARG001
+async def get_places(request: Request, supabase_client: SupabaseClientDependency, api_request: AllPlaceRequest, verify_user: verify_bearer_token) -> APIResponse[ResponsePlace]:  # noqa: ARG001
     """Get all places."""
     try:
         result = await PlaceService.get_all_places(supabase_client, limit=api_request.limit, page=api_request.page, query_filter=api_request.query_filter)
@@ -26,7 +27,7 @@ async def get_places(request: Request, supabase_client: SupabaseClientDependency
 
 
 @router.get("/{uuid_of_place}/")
-async def get_place(supabase_client: SupabaseClientDependency, uuid_of_place: str) -> APIResponse[Place]:
+async def get_place(supabase_client: SupabaseClientDependency, uuid_of_place: str, verify_user: verify_bearer_token) -> APIResponse[Place]:  # noqa: ARG001
     """Get a specific place by ID."""
     if not uuid_of_place or uuid_of_place == "{uuid_of_place}":
         return APIResponse(success=False, http_status=400, message="UUID of place is required", data=None)
@@ -42,7 +43,7 @@ async def get_place(supabase_client: SupabaseClientDependency, uuid_of_place: st
 
 
 @router.get("/top")
-async def top_places(supabase_client: SupabaseClientDependency) -> APIResponse[ResponseTopPlaceRating]:
+async def top_places(supabase_client: SupabaseClientDependency, verify_user: verify_bearer_token) -> APIResponse[ResponseTopPlaceRating]:  # noqa: ARG001
     """Get top places."""
     try:
         result = await PlaceService.get_top_places(supabase_client, limit=10)
@@ -56,7 +57,7 @@ async def top_places(supabase_client: SupabaseClientDependency) -> APIResponse[R
 
 
 @router.get("/top/category")
-async def top_places_by_category(supabase_client: SupabaseClientDependency) -> APIResponse[ResponseTopPlaceByCategory]:
+async def top_places_by_category(supabase_client: SupabaseClientDependency, verify_user: verify_bearer_token) -> APIResponse[ResponseTopPlaceByCategory]:  # noqa: ARG001
     """Get top places by category."""
     try:
         result = await PlaceService.get_top_places_by_category(supabase_client, limit=10)
@@ -71,7 +72,7 @@ async def top_places_by_category(supabase_client: SupabaseClientDependency) -> A
 
 
 @router.get("/top/province")
-async def top_places_by_province(supabase_client: SupabaseClientDependency) -> APIResponse[ResponseTopPlaceByProvince]:
+async def top_places_by_province(supabase_client: SupabaseClientDependency, verify_user: verify_bearer_token) -> APIResponse[ResponseTopPlaceByProvince]:  # noqa: ARG001
     """Get top places by province."""
     try:
         result = await PlaceService.get_top_places_by_province(supabase_client, limit=10)
@@ -85,7 +86,7 @@ async def top_places_by_province(supabase_client: SupabaseClientDependency) -> A
 
 
 @router.post("/rate")
-async def rate_place(supabase_client: SupabaseClientDependency, user_rating: UserRating) -> APIResponse:
+async def rate_place(supabase_client: SupabaseClientDependency, user_rating: UserRating, verify_user: verify_bearer_token) -> APIResponse:  # noqa: ARG001
     """Rate a place."""
     try:
         await PlaceService.upsert_place_rating(supabase_client, user_rating)

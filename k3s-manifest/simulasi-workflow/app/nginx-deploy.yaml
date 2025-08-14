@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: teman-wisata:latest  # Akan diganti otomatis oleh workflow
+        image: teman-wisata:20250814023400
         imagePullPolicy: Never
         ports:
         - containerPort: 80

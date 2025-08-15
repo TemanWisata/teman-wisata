@@ -1,81 +1,54 @@
 <!doctype html>
 <html lang="id" data-theme="lemonade">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/teman-wisata.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teman Wisata</title>
-</head>
-
-<body>
-    <div class="hero min-h-screen"
-        style="background-image: url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp);">
-        <div class="hero-overlay bg-gradient-to-b from-slate-900/70 via-indigo-900/50 to-sky-900/40">
-
-
-        </div>
-        <div class="hero-content text-neutral-content text-center">
-            <div class="max-w-4xl">
-                <h1 class="mb-5 text-5xl font-bold">Monumen Nasional</h1>
-                <div class="flex items-center justify-center gap-3">
-                    <div class="mt-2 flex items-center justify-center gap-2 text-xl">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-neutral-content" fill="currentColor"
-                            viewBox="0 0 20 20" aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                d="M10 2a6 6 0 00-6 6c0 4.418 6 10 6 10s6-5.582 6-10a6 6 0 00-6-6zm0 8a2 2 0 110-4 2 2 0 010 4z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <span class="opacity-90">Jakarta</span>
-
-                    </div>
-                    <div class="rating rating-s rating-half">
-                        <input type="radio" name="rating-hero" class="rating-hidden" aria-label="0 stars" disabled />
-                        <input type="radio" name="rating-hero" class="mask mask-star-2 bg-amber-400 mask-half-1"
-                            aria-label="0.5 stars" disabled />
-                        <input type="radio" name="rating-hero" class="mask mask-star-2 bg-amber-400 mask-half-2"
-                            aria-label="1 star" disabled />
-                        <input type="radio" name="rating-hero" class="mask mask-star-2 bg-amber-400 mask-half-1"
-                            aria-label="1.5 stars" disabled />
-                        <input type="radio" name="rating-hero" class="mask mask-star-2 bg-amber-400 mask-half-2"
-                            aria-label="2 stars" disabled />
-                        <input type="radio" name="rating-hero" class="mask mask-star-2 bg-amber-400 mask-half-1"
-                            aria-label="2.5 stars" disabled />
-                        <input type="radio" name="rating-hero" class="mask mask-star-2 bg-amber-400 mask-half-2"
-                            aria-label="3 stars" disabled />
-                        <input type="radio" name="rating-hero" class="mask mask-star-2 bg-amber-400 mask-half-1"
-                            aria-label="3.5 stars" disabled />
-                        <input type="radio" name="rating-hero" class="mask mask-star-2 bg-amber-400 mask-half-2"
-                            aria-label="4 stars" disabled />
-                        <!-- 4.5 selected -->
-                        <input type="radio" name="rating-hero" class="mask mask-star-2 bg-amber-400 mask-half-1"
-                            aria-label="4.5 stars" checked disabled />
-                        <input type="radio" name="rating-hero" class="mask mask-star-2 bg-amber-400 mask-half-2"
-                            aria-label="5 stars" disabled />
-                    </div>
-                    <span class="text-sm opacity-90">4.5 • 1,234 ulasan</span>
-                </div>
-                <p class="mb-5">
-                    Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-                    quasi. In deleniti eaque aut repudiandae et a id nisi. Provident cupiditate voluptatem et in.
-                    Quaerat fugiat ut assumenda excepturi exercitationem
-                    quasi. In deleniti eaque aut repudiandae et a id nisi. Provident cupiditate voluptatem et in.
-                    Quaerat fugiat ut assumenda excepturi exercitationem
-                    quasi. In deleniti eaque aut repudiandae et a id nisi. Provident cupiditate voluptatem et in.
-                    Quaerat fugiat ut assumenda excepturi exercitationem
-                    quasi. In deleniti eaque aut repudiandae et a id nisi. Provident cupiditate voluptatem et in.
-                    Quaerat fugiat ut assumenda excepturi exercitationem
-                    quasi. In deleniti eaque aut repudiandae et a id nisi.
-                </p>
-                <div class="flex justify-center">
-                    <a class="btn btn-primary" href="/recommender.html">Explore</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script type="module" src="/src/main.ts"></script>
+  </head>
 
-</body>
-
+  <body>
+    <div
+      class="hero min-h-screen"
+      style="
+        background-image: url(/hero_bg.webp);
+      "
+      x-data="placeDetail()"
+      x-init="init()"
+    >
+      <div
+        class="hero-overlay bg-gradient-to-b from-black/80 via-slate-900/70 to-indigo-900/60"
+      ></div>
+      <div class="hero-content text-neutral-content text-center">
+        <template x-if="loading">
+          <div class="max-w-4xl">
+            <h1 class="mb-5 text-5xl font-bold animate-pulse">Loading...</h1>
+          </div>
+        </template>
+        <template x-if="error">
+          <div class="max-w-4xl">
+            <h1
+              class="mb-5 text-2xl font-bold text-red-500"
+              x-text="error"
+            ></h1>
+          </div>
+        </template>
+        <template x-if="!loading && place">
+          <div class="max-w-4xl">
+            <h1 class="mb-5 text-5xl font-bold" x-text="place.place_name"></h1>
+            <div class="flex items-center justify-center gap-3">
+              {{> location placeProvince="place.province" }}
+              {{> rating placeRating="place.rating ? Number(place.rating).toFixed(2) : '0.00'" }}
+              {{> category placeCategory="place.category" }}
+            </div>
+            <p class="mb-5 mt-6" x-text="place.description"></p>
+            <div class="flex justify-center">
+              <a class="btn btn-primary" href="/recommender.html">Explore</a>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </body>
 </html>

@@ -1,4 +1,4 @@
-<div class='card bg-base-100 {{width}} shadow-sm'>
+<div class='card bg-base-100 {{width}} max-h-96 shadow-sm'>
   <figure>
     <img src='/place_dummy.webp' alt='Shoes' class='w-full h-48 object-cover' />
   </figure>
@@ -46,7 +46,7 @@
     <p class='line-clamp-2' x-text='place.description'></p>
 
     <div class='card-actions justify-end'>
-      <a class='btn btn-primary' href='/place.html'>Lebih lanjut</a>
+      <a class='btn btn-primary' :href="`/place.html?id=${place.id}`">Lebih lanjut</a>
     </div>
   </div>
 </div>

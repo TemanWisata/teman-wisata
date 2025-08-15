@@ -38,6 +38,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: image-tag
-          path: |
-            <<< "${{ env.TAG }}" > image-tag.txt
-            image-tag.txt
+          path: image-tag.txt

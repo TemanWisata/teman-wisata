@@ -1,7 +1,9 @@
 FROM python:3.12-slim
 
+# Install dependencies
 RUN apt-get update && apt-get install -y gcc g++ python3-dev build-essential curl nodejs npm
 
+# Install uv (Astral.sh)
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
 RUN sh /uv-installer.sh && rm /uv-installer.sh
 
@@ -10,8 +12,8 @@ ENV UV_COMPILE_BYTECODE=0
 
 WORKDIR /app
 
-# Python dependencies
-COPY pyproject.toml ./
+# Install Python dependencies
+COPY pyproject.toml ./ 
 COPY uv.lock ./
 RUN uv lock
 RUN uv sync
@@ -25,7 +27,8 @@ RUN npm install && npm run build
 WORKDIR /app
 COPY . /app
 
-# Copy built UI assets to app/static (adjust path as needed)
-RUN mkdir -p /app/static && cp -r /ui/dist/* /app/static/
+# Copy built UI assets ke path yang sesuai dengan kode FastAPI
+RUN mkdir -p /app/ui && cp -r /ui/dist /app/ui/
 
+# Jalankan aplikasi
 CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

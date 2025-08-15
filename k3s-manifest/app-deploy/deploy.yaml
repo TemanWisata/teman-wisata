@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: teman-wisata
-          image: teman-wisata:latest   # image hasil build nerdctl
+          image: app-temanwisata:v1   # image hasil build nerdctl
           imagePullPolicy: Never
           ports:
             - containerPort: 8000      # sesuaikan dengan expose port di Dockerfile
@@ -33,6 +33,18 @@ spec:
                 secretKeyRef:
                   name: supabase-secret
                   key: api_key
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rand-secret
+                  key: SECRET_KEY
+            # Env non-sensitif langsung
+            - name: ENVIRONMENT
+              value: "prod"
+            - name: ALGORITHM
+              value: "HS256"
+            - name: ACCESS_TOKEN_EXPIRE_MINUTES
+              value: "30"
 ---
 apiVersion: v1
 kind: Service

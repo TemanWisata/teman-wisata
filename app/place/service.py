@@ -170,8 +170,8 @@ class PlaceService:
     async def get_user_place_rating(supabase: AsyncClient, user_id: int, place_id: int) -> UserRating | None:
         """Get a user's rating for a specific place, returned as UserRating schema."""
         try:
-            response = await supabase.from_("user_place_rating").select("user_id, place_id, rating").eq("user_id", user_id).eq("place_id", place_id).single().execute()
-            data = response.data
+            response = await supabase.from_("user_place_rating").select("user_id, place_id, rating").eq("user_id", user_id).eq("place_id", place_id).limit(1).execute()
+            data = response.data[0]
             if data and all(k in data for k in ("user_id", "place_id", "rating")):
                 return UserRating(user_id=data["user_id"], place_id=data["place_id"], rating=float(data["rating"]))
         except ValidationError as ve:

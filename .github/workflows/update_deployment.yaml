@@ -1,11 +1,10 @@
 name: update-deployment
 
 on:
-  workflow_dispatch: {}  # Bisa manual
+  workflow_dispatch: {}
   workflow_run:
     workflows: ["update-manifest"]
-    types:
-      - completed         # Bisa otomatis setelah update-manifest sukses
+    types: [completed]
 
 jobs:
   deploy:
@@ -15,11 +14,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Ambil tag dari manifest
+      - name: Ambil TAG dari artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: image-tag
+          path: .
+
+      - name: Baca TAG
         run: |
-          cd k3s-manifest/app-deploy/
-          TAG=$(grep "image: app-temanwisata:" deploy.yaml | awk -F: '{print $2}')
-          echo "TAG yang akan dipakai untuk deployment: ${TAG}"
+          TAG=$(cat image-tag.txt)
+          echo "TAG=${TAG}" >> $GITHUB_ENV
+          echo "Tag yang akan dipakai untuk deployment: ${TAG}"
 
       - name: Deploy ke cluster via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -32,4 +37,3 @@ jobs:
             kubectl apply -f deploy.yaml
             kubectl rollout status deployment/fastapi-temanwisata -n backend --timeout=120s
             kubectl get pods -n backend -l app=teman-wisata -o wide
-

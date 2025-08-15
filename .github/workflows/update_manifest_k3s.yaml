@@ -1,11 +1,10 @@
 name: update-manifest
 
 on:
-  workflow_dispatch: {}   # Bisa manual
+  workflow_dispatch: {}
   workflow_run:
     workflows: ["build-image"]
-    types:
-      - completed       # Bisa otomatis setelah build-image sukses
+    types: [completed]
 
 jobs:
   update-manifest:
@@ -15,16 +14,19 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          persist-credentials: true   # Supaya bisa push
+          persist-credentials: true
 
-      - name: Ambil tag dari file
+      - name: Ambil artifact TAG
+        uses: actions/download-artifact@v4
+        with:
+          name: image-tag
+          path: .
+
+      - name: Baca TAG
         run: |
-          if [ ! -f "${{ secrets.VM_PROJECT_PATH }}/.image-tag" ]; then
-            echo "ERROR: .image-tag tidak ditemukan. Jalankan build-image dulu."
-            exit 1
-          fi
-          TAG=$(cat ${{ secrets.VM_PROJECT_PATH }}/.image-tag)
-          echo "TAG yang akan dipakai: ${TAG}"
+          TAG=$(cat image-tag.txt)
+          echo "TAG=${TAG}" >> $GITHUB_ENV
+          echo "Tag yang akan dipakai: ${TAG}"
 
       - name: Update manifest dan commit
         run: |
@@ -35,4 +37,3 @@ jobs:
           git add deploy.yaml
           git commit -m "Update image tag to ${TAG} by workflow" || echo "No changes to commit"
           git push origin main
-

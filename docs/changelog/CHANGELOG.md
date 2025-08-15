@@ -2,6 +2,40 @@
 
 Teman Wisata Version List 🚀
 
+## v0.6.0 (2025-08-15)
+
+### Chores
+
+- **ci**: Adjust GitHub Actions workflow k3s paths and configuration
+  ([`ef63bfd`](https://github.com/TemanWisata/teman-wisata/commit/ef63bfd67d42aedf7cab1ab1e153b993b896bc71))
+
+- **ci**: Adjust GitHub Actions workflow k3s paths and configuration method get tag
+  ([`f465610`](https://github.com/TemanWisata/teman-wisata/commit/f465610e10f0f665dbed117b84098b3201d61675))
+
+- **ci**: Update workflows, Loki config, and add Supabase secret manifest
+  ([`1dda4aa`](https://github.com/TemanWisata/teman-wisata/commit/1dda4aaa22e0e1e7728e7b8e06ba3c565b16dbc1))
+
+### Features
+
+- Enhance place rating functionality with improved modal and Alpine.js integration
+  ([`8be112b`](https://github.com/TemanWisata/teman-wisata/commit/8be112bc3e5b6954604a95da819fecb9cd99e06c))
+
+- Enhance user rating functionality with new modal and schema updates
+  ([`45fdcbb`](https://github.com/TemanWisata/teman-wisata/commit/45fdcbb6db22ed14161c2efefa8caa3142ef9cbb))
+
+- Implement place detail functionality and enhance UI components
+  ([`e4abd46`](https://github.com/TemanWisata/teman-wisata/commit/e4abd46baa5693ded73b251cda06ab6fda59cc78))
+
+- Implement user rating functionality with request schema and API integration
+  ([`7f84a82`](https://github.com/TemanWisata/teman-wisata/commit/7f84a8278f8871170825bc3e429f34af934b1303))
+
+- Refactor recommender to use top-place template for better code organization
+  ([`a727578`](https://github.com/TemanWisata/teman-wisata/commit/a7275782ff01db821ce1cace802264da477d89a5))
+
+- Update place detail and rating functionality with improved parameter handling and UI integration
+  ([`df470a9`](https://github.com/TemanWisata/teman-wisata/commit/df470a93238bd39b2616f4b5aaed1fc273fda4a0))
+
+
 ## v0.5.0 (2025-08-15)
 
 ### Chores

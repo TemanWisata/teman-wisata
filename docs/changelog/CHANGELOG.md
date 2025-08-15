@@ -2,6 +2,9 @@
 
 Teman Wisata Version List 🚀
 
+## v0.7.4 (2025-08-15)
+
+
 ## v0.7.3 (2025-08-15)
 
 ### Bug Fixes

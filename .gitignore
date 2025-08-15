@@ -344,3 +344,5 @@ vite.config.ts.timestamp-*
 
 # Makefile
 Makefile.bak
+
+mlruns/

@@ -7,6 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "argon2-cffi>=25.1.0",
     "authlib>=1.6.1",
+    "boto3>=1.40.10",
     "fastapi>=0.116.1",
     "humanize>=4.12.3",
     "loguru>=0.7.3",
@@ -15,6 +16,7 @@ dependencies = [
     "psutil>=7.0.0",
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
+    "rectools[torch]>=0.16.0",
     "rich>=14.1.0",
     "scalar-fastapi>=1.2.2",
     "supabase>=2.17.0",

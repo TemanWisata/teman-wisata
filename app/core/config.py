@@ -7,6 +7,46 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.core.utils import Utils
 
+class MlflowSettings(BaseSettings):
+    """MLflow configuration settings."""
+
+    model_uri: str | None = Field(
+        default=None,
+        description="The URI of the MLflow model.",
+    )
+
+    tracking_uri: str | None = Field(
+        default=None,
+        description="The URI of the MLflow tracking server.",
+    )
+
+    model_config = SettingsConfigDict(
+        env_file=Utils.get_root_path().joinpath(".env"),
+        env_file_encoding="utf-8",
+        env_prefix="MLFLOW_",
+        extra="allow",
+        case_sensitive=False,
+    )
+
+class AWSSettings(BaseSettings):
+    """AWS configuration settings."""
+
+    access_key_id: str | None = Field(
+        default=None,
+        description="The AWS access key ID.",
+    )
+    secret_access_key: str | None = Field(
+        default=None,
+        description="The AWS secret access key.",
+    )
+
+    model_config = SettingsConfigDict(
+        env_file=Utils.get_root_path().joinpath(".env"),
+        env_file_encoding="utf-8",
+        env_prefix="AWS_",
+        extra="allow",
+        case_sensitive=False,
+    )
 
 class SupabaseSettings(BaseSettings):
     """Supabase configuration settings."""
@@ -58,6 +98,8 @@ class Config(BaseSettings):
         case_sensitive=False,
     )
     oauth: OauthSettings = Field(default_factory=OauthSettings, description="OAuth configuration settings.")
+    mlflow: MlflowSettings = Field(default_factory=MlflowSettings, description="MLflow configuration settings.")
+    aws: AWSSettings = Field(default_factory=AWSSettings, description="AWS configuration settings.")
 
     @property
     def version(self) -> str:

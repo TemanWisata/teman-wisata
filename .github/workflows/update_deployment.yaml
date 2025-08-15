@@ -1,0 +1,39 @@
+name: update-deployment
+
+on:
+  workflow_dispatch: {}
+  workflow_run:
+    workflows: ["update-manifest"]
+    types: [completed]
+
+jobs:
+  deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Ambil TAG dari artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: image-tag
+          path: .
+
+      - name: Baca TAG
+        run: |
+          TAG=$(cat image-tag.txt)
+          echo "TAG=${TAG}" >> $GITHUB_ENV
+          echo "Tag yang akan dipakai untuk deployment: ${TAG}"
+
+      - name: Deploy ke cluster via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.VM_PROJECT_PATH }}/k3s-manifest/app-deploy
+            kubectl apply -f deploy.yaml
+            kubectl rollout status deployment/fastapi-temanwisata -n backend --timeout=120s
+            kubectl get pods -n backend -l app=teman-wisata -o wide

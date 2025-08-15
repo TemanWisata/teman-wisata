@@ -1,0 +1,39 @@
+name: update-manifest
+
+on:
+  workflow_dispatch: {}
+  workflow_run:
+    workflows: ["build-image"]
+    types: [completed]
+
+jobs:
+  update-manifest:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Ambil artifact TAG
+        uses: actions/download-artifact@v4
+        with:
+          name: image-tag
+          path: .
+
+      - name: Baca TAG
+        run: |
+          TAG=$(cat image-tag.txt)
+          echo "TAG=${TAG}" >> $GITHUB_ENV
+          echo "Tag yang akan dipakai: ${TAG}"
+
+      - name: Update manifest dan commit
+        run: |
+          cd k3s-manifest/app-deploy
+          sed -i "s|image: app-temanwisata:.*|image: app-temanwisata:${TAG}|" deploy.yaml
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add deploy.yaml
+          git commit -m "Update image tag to ${TAG} by workflow" || echo "No changes to commit"
+          git push origin main

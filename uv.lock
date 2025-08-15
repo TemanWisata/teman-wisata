@@ -3059,6 +3059,7 @@ wheels = [
 ]
 
 [[package]]
+
 name = "sympy"
 version = "1.14.0"
 source = { registry = "https://pypi.org/simple" }
@@ -3072,7 +3073,8 @@ wheels = [
 
 [[package]]
 name = "teman-wisata"
-version = "0.3.0"
+version = "0.5.0"
+
 source = { virtual = "." }
 dependencies = [
     { name = "argon2-cffi" },

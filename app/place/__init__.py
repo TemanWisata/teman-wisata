@@ -12,6 +12,7 @@ from .schema import (
     TopPlaceByProvince,
     TopPlaceRating,
     UserRating,
+    UserRatingRequest,
 )
 from .service import PlaceService
 
@@ -28,4 +29,5 @@ __all__ = [
     "TopPlaceByProvince",
     "TopPlaceRating",
     "UserRating",
+    "UserRatingRequest",
 ]

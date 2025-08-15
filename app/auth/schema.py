@@ -41,7 +41,7 @@ class Token(BaseModel):
     """Model for authentication token."""
 
     access_token: str = Field("access_token", description="Access token for the user.")
-    token_type: Literal["bearer"] | None = Field(default="bearer", description="Type of the token, usually 'bearer'.")
+    token_type: Literal["Bearer"] | None = Field(default="Bearer", description="Type of the token, usually 'Bearer'.")
 
     def model_dump(self, *args, **kwargs) -> dict:  # noqa: ANN002, ANN003
         """Override model_dump to handle SecretStr fields."""

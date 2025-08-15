@@ -346,3 +346,7 @@ vite.config.ts.timestamp-*
 Makefile.bak
 
 mlruns/
+
+# workflows
+/home/ubuntu/teman-wisata/.github/workflows/tes-koneksi.yaml
+

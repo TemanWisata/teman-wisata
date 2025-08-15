@@ -1,0 +1,14 @@
+architecture: standalone
+
+auth:
+  enabled: false   # disable password untuk simplicity (jangan di prod)
+
+master:
+  persistence:
+    enabled: true
+    storageClass: "local-path"  # default storageClass K3s
+    size: 1Gi
+
+metrics:
+  enabled: false  # kamu bisa aktifkan nanti kalau mau monitoring Prometheus
+

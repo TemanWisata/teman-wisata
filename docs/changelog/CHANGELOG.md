@@ -2,6 +2,164 @@
 
 Teman Wisata Version List 🚀
 
+## v0.7.11 (2025-08-15)
+
+### Bug Fixes
+
+- Job image-tag.txt build-image workflow
+  ([`4fc9a36`](https://github.com/TemanWisata/teman-wisata/commit/4fc9a36add47e9376043c214d4215e32002c6469))
+
+
+## v0.7.10 (2025-08-15)
+
+### Bug Fixes
+
+- Job image-tag build-image workflow
+  ([`3e8a759`](https://github.com/TemanWisata/teman-wisata/commit/3e8a759a7193c806bc5fbadb28599f2ddc777272))
+
+
+## v0.7.9 (2025-08-15)
+
+### Bug Fixes
+
+- Path context -t in nerdctl build-image workflow
+  ([`4d89612`](https://github.com/TemanWisata/teman-wisata/commit/4d8961219f9a578ac979896e2ac6ca72ac1212d7))
+
+
+## v0.7.8 (2025-08-15)
+
+### Bug Fixes
+
+- Path /Dockerfile build -t in nerdctl build-image workflow
+  ([`0c59f13`](https://github.com/TemanWisata/teman-wisata/commit/0c59f13c74b609f34c5ee68411f7082b08669f9f))
+
+
+## v0.7.7 (2025-08-15)
+
+### Bug Fixes
+
+- Path build -t in nerdctl build-image workflow
+  ([`ce4577e`](https://github.com/TemanWisata/teman-wisata/commit/ce4577e62403857616d8262f9a4cf4ec30494b97))
+
+
+## v0.7.6 (2025-08-15)
+
+### Bug Fixes
+
+- Add sudo in nerdctl build-image workflow
+  ([`896da0f`](https://github.com/TemanWisata/teman-wisata/commit/896da0fd235574628f2e21d0e6ed97586b2d617d))
+
+
+## v0.7.5 (2025-08-15)
+
+
+## v0.7.4 (2025-08-15)
+
+
+## v0.7.3 (2025-08-15)
+
+### Bug Fixes
+
+- Debug workflow
+  ([`f667d12`](https://github.com/TemanWisata/teman-wisata/commit/f667d124d1250913b7113f02ff80ca8e48ba28e6))
+
+
+## v0.7.2 (2025-08-15)
+
+### Bug Fixes
+
+- Path root build-image workflow
+  ([`472f0cf`](https://github.com/TemanWisata/teman-wisata/commit/472f0cff5d8062e53caef89143f41b333600c693))
+
+
+## v0.7.1 (2025-08-15)
+
+
+## v0.7.0 (2025-08-15)
+
+### Chores
+
+- Exclude workflows tes-koneksi.yaml
+  ([`b579b85`](https://github.com/TemanWisata/teman-wisata/commit/b579b8559deb36c04c6d5bc840aa2720bc6bc22f))
+
+### Features
+
+- Implement top places by province feature with Alpine.js integration and UI updates
+  ([`2545f61`](https://github.com/TemanWisata/teman-wisata/commit/2545f61ce18c395644c9b8fbcbf7a35f2370d297))
+
+
+## v0.6.0 (2025-08-15)
+
+### Chores
+
+- **ci**: Adjust GitHub Actions workflow k3s paths and configuration
+  ([`ef63bfd`](https://github.com/TemanWisata/teman-wisata/commit/ef63bfd67d42aedf7cab1ab1e153b993b896bc71))
+
+- **ci**: Adjust GitHub Actions workflow k3s paths and configuration method get tag
+  ([`f465610`](https://github.com/TemanWisata/teman-wisata/commit/f465610e10f0f665dbed117b84098b3201d61675))
+
+- **ci**: Update workflows, Loki config, and add Supabase secret manifest
+  ([`1dda4aa`](https://github.com/TemanWisata/teman-wisata/commit/1dda4aaa22e0e1e7728e7b8e06ba3c565b16dbc1))
+
+### Features
+
+- Enhance place rating functionality with improved modal and Alpine.js integration
+  ([`8be112b`](https://github.com/TemanWisata/teman-wisata/commit/8be112bc3e5b6954604a95da819fecb9cd99e06c))
+
+- Enhance user rating functionality with new modal and schema updates
+  ([`45fdcbb`](https://github.com/TemanWisata/teman-wisata/commit/45fdcbb6db22ed14161c2efefa8caa3142ef9cbb))
+
+- Implement place detail functionality and enhance UI components
+  ([`e4abd46`](https://github.com/TemanWisata/teman-wisata/commit/e4abd46baa5693ded73b251cda06ab6fda59cc78))
+
+- Implement user rating functionality with request schema and API integration
+  ([`7f84a82`](https://github.com/TemanWisata/teman-wisata/commit/7f84a8278f8871170825bc3e429f34af934b1303))
+
+- Refactor recommender to use top-place template for better code organization
+  ([`a727578`](https://github.com/TemanWisata/teman-wisata/commit/a7275782ff01db821ce1cace802264da477d89a5))
+
+- Update place detail and rating functionality with improved parameter handling and UI integration
+  ([`df470a9`](https://github.com/TemanWisata/teman-wisata/commit/df470a93238bd39b2616f4b5aaed1fc273fda4a0))
+
+
+## v0.5.0 (2025-08-15)
+
+### Chores
+
+- Bawa perubahan lokal dari k3s-dev ke main
+  ([`8a00ae5`](https://github.com/TemanWisata/teman-wisata/commit/8a00ae5d3f4ff916119b97f0180ad1a52895f632))
+
+### Features
+
+- Enhance Dockerfile and Makefile for improved build process and UI integration
+  ([`d2fb2af`](https://github.com/TemanWisata/teman-wisata/commit/d2fb2afe10966d96c69b59b2184ec07360ca8ddc))
+
+- Update UI components and services for enhanced functionality
+  ([`96b3002`](https://github.com/TemanWisata/teman-wisata/commit/96b3002ef06647fd5c3c8bfe3fd4be0a452684e8))
+
+
+## v0.4.0 (2025-08-14)
+
+### Chores
+
+- Enable manual trigger (workflow_dispatch) for update-deployment
+  ([`ec671b9`](https://github.com/TemanWisata/teman-wisata/commit/ec671b9b794ac235a7416687edf1af09213b1fa6))
+
+- Ping actions index
+  ([`e6d51cd`](https://github.com/TemanWisata/teman-wisata/commit/e6d51cdd03c450ec7a6706a5a3657aa9a85a3d73))
+
+- Update pr template to yaml
+  ([`fbe8aae`](https://github.com/TemanWisata/teman-wisata/commit/fbe8aaec2669d503356102b81fb65f25c863b96a))
+
+### Features
+
+- Add NGINX simulation manifest and CI workflows
+  ([`3baccb6`](https://github.com/TemanWisata/teman-wisata/commit/3baccb60162dcb71bf78ce21af05f08cddf8d6c9))
+
+- Tambah folder k3s-manifest untuk deployment
+  ([`a8d0280`](https://github.com/TemanWisata/teman-wisata/commit/a8d028005df1a0a7c87ff501f68e99887125ae05))
+
+
 ## v0.3.0 (2025-08-06)
 
 ### Bug Fixes

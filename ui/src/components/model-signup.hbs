@@ -1,0 +1,57 @@
+<dialog id="{{signUpModalId}}" class="modal">
+    <div class="modal-box">
+        <h3 class="text-3xl font-bold text-center mb-2">Daftar Akun Baru</h3>
+        <p class="text-center text-base text-gray-500 mb-4">Buat akun baru untuk mulai menjelajah bersama Teman Wisata.</p>
+        <form method="dialog" class="w-full flex flex-col gap-4" x-data="{ show: false, username: '', email: '', password: '', confirm: '' }">
+            <fieldset class="fieldset border-none p-0">
+                <label class="label" for="signup-username">
+                    <span class="label-text font-semibold">Nama Pengguna</span>
+                </label>
+                <input id="signup-username" type="text" class="input input-bordered w-full"
+                    placeholder="Masukkan nama pengguna" autocomplete="username" required x-model="username" />
+            </fieldset>
+            <fieldset class="fieldset border-none p-0">
+                <label class="label" for="signup-email">
+                    <span class="label-text font-semibold">Email</span>
+                </label>
+                <input id="signup-email" type="email" class="input input-bordered w-full"
+                    placeholder="Masukkan email" autocomplete="email" required x-model="email" />
+            </fieldset>
+            <fieldset class="fieldset border-none p-0">
+                <label class="label" for="signup-password">
+                    <span class="label-text font-semibold">Kata Sandi</span>
+                </label>
+                <div class="relative">
+                    <input id="signup-password" :type="show ? 'text' : 'password'" class="input input-bordered w-full pr-12"
+                        placeholder="Buat kata sandi" autocomplete="new-password" required minlength="8" x-model="password" />
+                    <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-ghost btn-xs"
+                        @click="show = !show" tabindex="-1" aria-label="Tampilkan/sembunyikan kata sandi">
+                        <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        <svg x-show="show" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95m3.362-2.675A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.973 9.973 0 01-4.293 5.03M15 12a3 3 0 11-6 0 3 3 0 016 0zm-6.364 6.364L19.778 4.222" />
+                        </svg>
+                    </button>
+                </div>
+            </fieldset>
+            <fieldset class="fieldset border-none p-0">
+                <label class="label" for="signup-confirm">
+                    <span class="label-text font-semibold">Konfirmasi Kata Sandi</span>
+                </label>
+                <input id="signup-confirm" type="password" class="input input-bordered w-full"
+                    placeholder="Ulangi kata sandi" autocomplete="new-password" required x-model="confirm" />
+            </fieldset>
+            <button type="submit" class="btn btn-primary w-full mt-2"
+                :disabled="!username || !email || !password || password !== confirm">Daftar</button>
+            <button type="button" class="btn w-full"
+                onclick="document.getElementById('{{signUpModalId}}').close()">Batal</button>
+            <p class="text-center text-sm text-gray-500 mt-2">
+                Sudah punya akun?
+                <a href="#" class="link link-primary" onclick="document.getElementById('{{loginModalId}}').showModal()">Masuk</a>

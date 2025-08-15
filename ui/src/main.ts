@@ -1,17 +1,28 @@
 import './style.css';
 import 'htmx.org';
-import htmx from 'htmx.org';
 import Alpine from 'alpinejs';
+import {
+  loginForm,
+  topPlaces,
+  placeDetail,
+  placeRatingAlpine,
+  topPlaceProvince,
+} from './script';
 
 declare global {
   interface Window {
-    htmx: typeof htmx;
     Alpine: typeof Alpine;
+    loginForm: typeof loginForm;
+    topPlaces: typeof topPlaces;
+    placeDetail: typeof placeDetail;
+    placeRatingAlpine: typeof placeRatingAlpine;
+    topPlaceProvince: typeof topPlaceProvince;
   }
 }
-window.htmx = htmx;
 window.Alpine = Alpine;
-
+window.loginForm = loginForm;
+window.topPlaces = topPlaces;
+window.placeDetail = placeDetail;
+window.placeRatingAlpine = placeRatingAlpine;
+window.topPlaceProvince = topPlaceProvince;
 Alpine.start();
-console.log('HTMX loaded:', window.htmx);
-console.log('Alpine loaded:', window.Alpine);

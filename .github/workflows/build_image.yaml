@@ -30,6 +30,10 @@ jobs:
             sudo nerdctl --address /run/k3s/containerd/containerd.sock \
               build -t app-temanwisata:${{ env.TAG }} -f /home/ubuntu/teman-wisata/deployment/docker/Dockerfile --namespace k8s.io /home/ubuntu/teman-wisata/
 
+      - name: Simpan TAG ke file
+        run: |
+          echo "${{ env.TAG }}" > image-tag.txt
+
       - name: Upload TAG sebagai artifact
         uses: actions/upload-artifact@v4
         with:

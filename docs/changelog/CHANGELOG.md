@@ -2,6 +2,14 @@
 
 Teman Wisata Version List 🚀
 
+## v0.7.6 (2025-08-15)
+
+### Bug Fixes
+
+- Add sudo in nerdctl build-image workflow
+  ([`896da0f`](https://github.com/TemanWisata/teman-wisata/commit/896da0fd235574628f2e21d0e6ed97586b2d617d))
+
+
 ## v0.7.5 (2025-08-15)
 
 

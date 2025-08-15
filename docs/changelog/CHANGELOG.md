@@ -2,6 +2,19 @@
 
 Teman Wisata Version List 🚀
 
+## v0.7.0 (2025-08-15)
+
+### Chores
+
+- Exclude workflows tes-koneksi.yaml
+  ([`b579b85`](https://github.com/TemanWisata/teman-wisata/commit/b579b8559deb36c04c6d5bc840aa2720bc6bc22f))
+
+### Features
+
+- Implement top places by province feature with Alpine.js integration and UI updates
+  ([`2545f61`](https://github.com/TemanWisata/teman-wisata/commit/2545f61ce18c395644c9b8fbcbf7a35f2370d297))
+
+
 ## v0.6.0 (2025-08-15)
 
 ### Chores

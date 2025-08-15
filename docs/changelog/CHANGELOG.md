@@ -2,6 +2,9 @@
 
 Teman Wisata Version List 🚀
 
+## v0.7.1 (2025-08-15)
+
+
 ## v0.7.0 (2025-08-15)
 
 ### Chores

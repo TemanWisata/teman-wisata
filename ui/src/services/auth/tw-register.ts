@@ -33,13 +33,13 @@ export async function registerUser(
   }
 }
 
-(async () => {
-  const result = await registerUser({
-    username: 'Yourusername',
-    password: 'test1234',
-    dob: '2000-01-01',
-    full_name: 'Your Full Name',
-    province: 'Your Province',
-  });
-  console.log(result);
-})();
+// (async () => {
+//   const result = await registerUser({
+//     username: 'Yourusername',
+//     password: 'test1234',
+//     dob: '2000-01-01',
+//     full_name: 'Your Full Name',
+//     province: 'Your Province',
+//   });
+//   console.log(result);
+// })();

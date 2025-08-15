@@ -14,22 +14,14 @@ export interface Place {
   longitude?: number | null;
 }
 
-export interface PlacesResponse {
+export interface PlaceResponse {
   success: boolean;
   http_status: number;
   message: string;
-  data: Place[] | null;
+  data: Place | null;
 }
 
-export interface AllPlaceRequest {
-  limit?: number;
-  page?: number;
-  query_filter?: Record<string, unknown>;
-}
-
-export async function getPlaces(
-  params: AllPlaceRequest
-): Promise<PlacesResponse> {
+export async function getPlaceById(id: string): Promise<PlaceResponse> {
   const access_token = localStorage.getItem('access_token');
   const token_type = localStorage.getItem('token_type') || 'bearer';
 
@@ -43,9 +35,8 @@ export async function getPlaces(
   }
 
   try {
-    const response: AxiosResponse<PlacesResponse> = await axios.post(
-      'http://127.0.0.1:8000/api/v1/place/',
-      params,
+    const response: AxiosResponse<PlaceResponse> = await axios.get(
+      `http://127.0.0.1:8000/api/v1/place/${id}/`,
       {
         headers: {
           Authorization: `${token_type} ${access_token}`,
@@ -55,25 +46,25 @@ export async function getPlaces(
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response && error.response.data) {
-      return error.response.data as PlacesResponse;
+      return error.response.data as PlaceResponse;
     }
     throw error;
   }
 }
 
-// async function fetchPlaces() {
-//   const params: AllPlaceRequest = {
-//     limit: 10,
-//     page: 1,
-//   };
-
-//   const response = await getPlaces(params);
+// async function fetchPlaceById(id: string) {
+//   const response = await getPlaceById(id);
 
 //   if (response.success && response.data) {
-//     console.log('Places:', response.data);
+//     console.log('Place:', response.data);
 //   } else {
-//     console.error('Error fetching places:', response.message);
+//     console.error('Error fetching place:', response.message);
 //   }
 // }
 
-// fetchPlaces();
+// // Example usage:
+// const params = new URLSearchParams(window.location.search);
+// const id = params.get('id');
+// if (id) {
+//   fetchPlaceById(id);
+// }

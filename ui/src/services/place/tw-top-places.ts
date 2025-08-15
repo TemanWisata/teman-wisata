@@ -54,9 +54,9 @@ export async function getTopPlaces(): Promise<TopPlacesApiResponse> {
   }
 }
 
-const result = await getTopPlaces();
-if (result.success && result.data) {
-  console.log(result.data.places);
-} else {
-  console.error(result.message);
-}
+// const result = await getTopPlaces();
+// if (result.success && result.data) {
+//   console.log(result.data.places);
+// } else {
+//   console.error(result.message);
+// }

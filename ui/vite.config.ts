@@ -47,3 +47,12 @@ Handlebars.registerHelper('times', function (n, block) {
   }
   return accum;
 });
+
+Handlebars.registerHelper('toFixed', function (number, digits) {
+  const num = parseFloat(number);
+  if (!isNaN(num)) {
+    return num.toFixed(digits);
+  }
+  console.log('toFixed called with:', number, digits);
+  return number;
+});

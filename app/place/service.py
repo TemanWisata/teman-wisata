@@ -26,13 +26,22 @@ class PlaceService:
     """Service class for handling Place-related operations."""
 
     @classmethod
-    async def get_all_places(cls, supabase: AsyncClient, limit: int = 20, page: int = 1, query_filter: PlaceFilter | None = None) -> ResponsePlace:
+    async def get_all_places(
+        cls,
+        supabase: AsyncClient,
+        limit: int = 20,
+        page: int = 1,
+        query_filter: PlaceFilter | None = None,
+    ) -> ResponsePlace:
         """Get all places."""
         try:
             offset = (page - 1) * limit
             base_query = supabase.from_("place").select("*")
             filter_query = cls._apply_filters(base_query, query_filter)
-            count_query = cls._apply_filters(supabase.from_("place").select("*", count=CountMethod.exact), query_filter)
+            count_query = cls._apply_filters(
+                supabase.from_("place").select("*", count=CountMethod.exact),
+                query_filter,
+            )
             count_response = await count_query.execute()
             total_records = count_response.count or 0
             total_page = (total_records + limit - 1) // limit
@@ -40,11 +49,23 @@ class PlaceService:
 
             places = TypeAdapter(list[Place]).validate_python(response.data) if response.data else []
 
-            return ResponsePlace(places=places, pagination=PaginationResponse(total=total_page, has_next=len(places) == limit, has_prev=page > 1, page=page, limit=limit))
+            return ResponsePlace(
+                places=places,
+                pagination=PaginationResponse(
+                    total=total_page,
+                    has_next=len(places) == limit,
+                    has_prev=page > 1,
+                    page=page,
+                    limit=limit,
+                ),
+            )
         except HTTPException:
             raise
         except ValidationError as ve:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail={"msg": "Validation error", "errors": ve.errors()})  # noqa: B904
+            raise HTTPException(  # noqa: B904
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"msg": "Validation error", "errors": ve.errors()},
+            )
         except Exception as e:  # noqa: BLE001
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))  # noqa: B904
 
@@ -56,7 +77,12 @@ class PlaceService:
                 return query
 
             filter_mappings = [
-                (query_filter.category, "category", "eq", query_filter.category.value if query_filter.category else None),
+                (
+                    query_filter.category,
+                    "category",
+                    "eq",
+                    query_filter.category.value if query_filter.category else None,
+                ),
                 (query_filter.province, "province", "eq", query_filter.province),
                 (query_filter.min_price, "price", "gte", query_filter.min_price),
                 (query_filter.max_price, "price", "lte", query_filter.max_price),
@@ -86,7 +112,10 @@ class PlaceService:
                 return TypeAdapter(Place).validate_python(response.data)
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Place not found")  # noqa: TRY301
         except ValidationError as ve:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail={"msg": "Validation error", "errors": ve.errors()})  # noqa: B904
+            raise HTTPException(  # noqa: B904
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"msg": "Validation error", "errors": ve.errors()},
+            )
         except HTTPException:
             raise
         except Exception as e:  # noqa: BLE001
@@ -102,7 +131,10 @@ class PlaceService:
                 data = TypeAdapter(list[TopPlaceRating]).validate_python(response.data)
                 return ResponseTopPlaceRating(places=data)
         except ValidationError as ve:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail={"msg": "Validation error", "errors": ve.errors()})  # noqa: B904
+            raise HTTPException(  # noqa: B904
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"msg": "Validation error", "errors": ve.errors()},
+            )
         except HTTPException:
             raise
         except Exception as e:  # noqa: BLE001
@@ -126,7 +158,10 @@ class PlaceService:
 
             return ResponseTopPlaceByProvince()
         except ValidationError as ve:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail={"msg": "Validation error", "errors": ve.errors()})  # noqa: B904
+            raise HTTPException(  # noqa: B904
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"msg": "Validation error", "errors": ve.errors()},
+            )
         except HTTPException:
             raise
         except Exception as e:  # noqa: BLE001
@@ -148,7 +183,10 @@ class PlaceService:
                 return ResponseTopPlaceByCategory(data=data)
             return ResponseTopPlaceByCategory()
         except ValidationError as ve:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail={"msg": "Validation error", "errors": ve.errors()})  # noqa: B904
+            raise HTTPException(  # noqa: B904
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"msg": "Validation error", "errors": ve.errors()},
+            )
         except HTTPException:
             raise
         except Exception as e:  # noqa: BLE001
@@ -158,10 +196,45 @@ class PlaceService:
     async def upsert_place_rating(supabase: AsyncClient, user_rating: UserRating) -> None:
         """Upsert place rating for a user."""
         try:
-            await supabase.from_("user_place_rating").upsert({"user_id": user_rating.user_id, "place_id": user_rating.place_id, "rating": user_rating.rating}).execute()
+            response = await supabase.from_("user_place_rating").select("id").match({"user_id": user_rating.user_id, "place_id": user_rating.place_id}).limit(1).execute()
+            existing = response.data[0] if response.data else None
+            payload = {
+                "user_id": user_rating.user_id,
+                "place_id": user_rating.place_id,
+                "rating": user_rating.rating,
+            }
+            if existing and "id" in existing:
+                payload["id"] = existing["id"]
+            await supabase.from_("user_place_rating").upsert(payload).execute()
         except ValidationError as ve:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail={"msg": "Validation error", "errors": ve.errors()})  # noqa: B904
+            raise HTTPException(  # noqa: B904
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"msg": "Validation error", "errors": ve.errors()},
+            )
         except HTTPException:
             raise
         except Exception as e:  # noqa: BLE001
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))  # noqa: B904
+
+    @staticmethod
+    async def get_user_place_rating(supabase: AsyncClient, user_id: int, place_id: int) -> UserRating | None:
+        """Get a user's rating for a specific place, returned as UserRating schema."""
+        try:
+            response = await supabase.from_("user_place_rating").select("user_id, place_id, rating").eq("user_id", user_id).eq("place_id", place_id).limit(1).execute()
+            data = response.data[0]
+            if data and all(k in data for k in ("user_id", "place_id", "rating")):
+                return UserRating(
+                    user_id=data["user_id"],
+                    place_id=data["place_id"],
+                    rating=float(data["rating"]),
+                )
+        except ValidationError as ve:
+            raise HTTPException(  # noqa: B904
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"msg": "Validation error", "errors": ve.errors()},
+            )
+        except HTTPException:
+            raise
+        except Exception as e:  # noqa: BLE001
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))  # noqa: B904
+        return None

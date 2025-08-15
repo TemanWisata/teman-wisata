@@ -7,7 +7,7 @@ from app.api.v1.schema.api_response import APIResponse
 from app.auth import verify_bearer_token
 from app.infrastructure.di import SupabaseClientDependency
 from app.model import Place
-from app.place import AllPlaceRequest, PlaceService, ResponsePlace, ResponseTopPlaceByCategory, ResponseTopPlaceByProvince, ResponseTopPlaceRating, UserRating
+from app.place import AllPlaceRequest, PlaceService, ResponsePlace, ResponseTopPlaceByCategory, ResponseTopPlaceByProvince, ResponseTopPlaceRating, UserRating, UserRatingRequest
 
 router = APIRouter(prefix="/place")
 
@@ -86,11 +86,30 @@ async def top_places_by_province(supabase_client: SupabaseClientDependency, veri
 
 
 @router.post("/rate")
-async def rate_place(supabase_client: SupabaseClientDependency, user_rating: UserRating, verify_user: verify_bearer_token) -> APIResponse:  # noqa: ARG001
+async def rate_place(supabase_client: SupabaseClientDependency, rating_request: UserRatingRequest, verify_user: verify_bearer_token) -> APIResponse[UserRating]:
     """Rate a place."""
     try:
-        await PlaceService.upsert_place_rating(supabase_client, user_rating)
-        return APIResponse(success=True, http_status=200, message="Rating submitted successfully", data=None)
+        request_rating = UserRating(
+            user_id=verify_user.user_id,
+            place_id=rating_request.place_id,
+            rating=rating_request.rating,
+        )
+        await PlaceService.upsert_place_rating(supabase_client, request_rating)
+        return APIResponse(success=True, http_status=200, message="Rating submitted successfully", data=request_rating)
+    except ValidationError as e:
+        return APIResponse(success=False, http_status=400, message=f"Validation error: {e.errors()}", data=None)
+    except HTTPException as e:
+        return APIResponse(success=False, http_status=e.status_code, message=str(e.detail), data=None)
+    except Exception as e:  # noqa: BLE001
+        return APIResponse(success=False, http_status=500, message=f"An unexpected error occurred: {e!s}", data=None)
+
+
+@router.get("/rate/{place_id}")
+async def get_user_rating(supabase_client: SupabaseClientDependency, place_id: int, verify_user: verify_bearer_token) -> APIResponse[UserRating]:
+    """Get user rating for a place."""
+    try:
+        result = await PlaceService.get_user_place_rating(supabase_client, verify_user.user_id, place_id)
+        return APIResponse(success=True, http_status=200, message="User rating retrieved successfully", data=result)
     except ValidationError as e:
         return APIResponse(success=False, http_status=400, message=f"Validation error: {e.errors()}", data=None)
     except HTTPException as e:

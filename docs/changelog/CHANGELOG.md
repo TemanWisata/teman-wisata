@@ -2,6 +2,22 @@
 
 Teman Wisata Version List 🚀
 
+## v0.5.0 (2025-08-15)
+
+### Chores
+
+- Bawa perubahan lokal dari k3s-dev ke main
+  ([`8a00ae5`](https://github.com/TemanWisata/teman-wisata/commit/8a00ae5d3f4ff916119b97f0180ad1a52895f632))
+
+### Features
+
+- Enhance Dockerfile and Makefile for improved build process and UI integration
+  ([`d2fb2af`](https://github.com/TemanWisata/teman-wisata/commit/d2fb2afe10966d96c69b59b2184ec07360ca8ddc))
+
+- Update UI components and services for enhanced functionality
+  ([`96b3002`](https://github.com/TemanWisata/teman-wisata/commit/96b3002ef06647fd5c3c8bfe3fd4be0a452684e8))
+
+
 ## v0.4.0 (2025-08-14)
 
 ### Chores

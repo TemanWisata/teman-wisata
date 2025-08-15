@@ -2,6 +2,14 @@
 
 Teman Wisata Version List 🚀
 
+## v0.7.3 (2025-08-15)
+
+### Bug Fixes
+
+- Debug workflow
+  ([`f667d12`](https://github.com/TemanWisata/teman-wisata/commit/f667d124d1250913b7113f02ff80ca8e48ba28e6))
+
+
 ## v0.7.2 (2025-08-15)
 
 ### Bug Fixes

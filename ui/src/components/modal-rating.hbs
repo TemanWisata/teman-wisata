@@ -1,56 +1,51 @@
-<dialog id='{{modalRatingId}}' class='modal' x-data='{ userRating: 0 }'>
+<dialog
+  id='{{modalRatingId}}'
+  class='modal'
+  x-data="placeRatingAlpine(Number(document.getElementById('place-id').textContent.trim()))"
+  x-init='init()'
+>
   <div class='modal-box'>
     <h3 class='font-bold text-lg mb-4'>Beri Rating Tempat Ini</h3>
     <div class='flex flex-col items-center gap-4'>
       <div class='rating rating-lg'>
-        <input
-          type='radio'
-          name='place-rating'
-          class='mask mask-star-2 bg-yellow-400'
-          x-model='userRating'
-          value='1'
-        />
-        <input
-          type='radio'
-          name='place-rating'
-          class='mask mask-star-2 bg-yellow-400'
-          x-model='userRating'
-          value='2'
-        />
-        <input
-          type='radio'
-          name='place-rating'
-          class='mask mask-star-2 bg-yellow-400'
-          x-model='userRating'
-          value='3'
-        />
-        <input
-          type='radio'
-          name='place-rating'
-          class='mask mask-star-2 bg-yellow-400'
-          x-model='userRating'
-          value='4'
-        />
-        <input
-          type='radio'
-          name='place-rating'
-          class='mask mask-star-2 bg-yellow-400'
-          x-model='userRating'
-          value='5'
-        />
+        <template x-for='n in 5' :key='n'>
+          <input
+            type='radio'
+            name='place-rating'
+            class='mask mask-star-2 bg-yellow-400'
+            :value='n'
+            x-model='userRating'
+          />
+        </template>
       </div>
-      <div class="flex *:justify-center items-center gap-2">
+      <div class='text-sm text-gray-500 mt-2' x-show='userRating > 0'>
+        Rating kamu:
+        <span x-text='userRating'></span>
+      </div>
+      <template x-if='error'>
+        <div class='text-red-500 text-sm' x-text='error'></div>
+      </template>
+      <template x-if='success'>
+        <div class='text-green-500 text-sm' x-text='success'></div>
+      </template>
+      <div class='flex *:justify-center items-center gap-2'>
         <button
           class='btn btn-primary'
-          @click.prevent='submitRating && submitRating(userRating)'
-        >Submit</button>
+          :disabled='loading || userRating === 0'
+          @click.prevent='submitRating'
+        >
+          <span
+            x-show='loading'
+            class='loading loading-spinner loading-xs'
+          ></span>
+          <span x-show='!loading'>Submit</span>
+        </button>
         <button
           class='btn btn-secondary'
           @click="document.getElementById('{{modalRatingId}}').close()"
         >Batal</button>
       </div>
     </div>
-
   </div>
   <form method='dialog' class='modal-backdrop'>
     <button>close</button>

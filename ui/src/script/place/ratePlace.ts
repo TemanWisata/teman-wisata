@@ -4,6 +4,7 @@ import type {
 } from '../../services/place/tw-rating';
 
 export function placeRatingAlpine(placeId: number) {
+  console.log('Initializing placeRatingAlpine with placeId:', placeId);
   return {
     userRating: 0,
     loading: false,

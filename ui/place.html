@@ -71,7 +71,9 @@
           </div>
         </template>
       </div>
+      <div id="place-id" class="hidden" x-text="place ? place.place_id : ''"></div>
+
+        {{> modal-rating modalRatingId="modal_rating"}}
     </div>
-    {{> modal-rating modalRatingId="modal_rating" }}
   </body>
 </html>

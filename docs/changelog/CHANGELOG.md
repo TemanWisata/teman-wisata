@@ -2,6 +2,14 @@
 
 Teman Wisata Version List 🚀
 
+## v0.7.11 (2025-08-15)
+
+### Bug Fixes
+
+- Job image-tag.txt build-image workflow
+  ([`4fc9a36`](https://github.com/TemanWisata/teman-wisata/commit/4fc9a36add47e9376043c214d4215e32002c6469))
+
+
 ## v0.7.10 (2025-08-15)
 
 ### Bug Fixes

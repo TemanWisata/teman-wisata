@@ -3,8 +3,13 @@ import type {
   RatingResponse,
 } from '../../services/place/tw-rating';
 
-export function placeRatingAlpine(placeId: number) {
-  console.log('Initializing placeRatingAlpine with placeId:', placeId);
+export function placeRatingAlpine() {
+  const params = new URLSearchParams(window.location.search);
+  const placeId = Number(params.get('intid'));
+  console.log('Place ID:', placeId);
+  if (!placeId) {
+    throw new Error('Place ID not found in URL parameters');
+  }
   return {
     userRating: 0,
     loading: false,

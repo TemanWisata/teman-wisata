@@ -1,5 +1,5 @@
 import { getPlaceById, type Place } from '../../services/place/tw-place';
-
+let initialized = false;
 export function placeDetail() {
   return {
     place: null as Place | null,
@@ -30,6 +30,8 @@ export function placeDetail() {
       }
     },
     init() {
+      if (initialized) return;
+      initialized = true;
       this.fetch();
     },
   };

@@ -15,6 +15,8 @@
       x-data="placeDetail()"
       x-init="init()"
     >
+      <div id="place-id" class="hidden" x-text="place ? place.place_id : ''"></div>
+
       <div
         class="hero-overlay bg-gradient-to-b from-black/80 via-slate-900/70 to-indigo-900/60"
       >
@@ -71,7 +73,6 @@
           </div>
         </template>
       </div>
-      <div id="place-id" class="hidden" x-text="place ? place.place_id : ''"></div>
 
         {{> modal-rating modalRatingId="modal_rating"}}
     </div>

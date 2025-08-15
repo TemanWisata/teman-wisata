@@ -1,0 +1,11 @@
+ <template x-for="place in places" :key="place.id">
+        <div>
+          {{> place-card width="w-96"}}
+          <script type="template" x-data>
+            <span x-text="place.place_name"></span>
+            <span x-text="place.province"></span>
+            <span x-text="place.avg_rating ? place.avg_rating.toFixed(2) : '0.00'"></span>        <span x-text="place.category"></span>
+            <span x-text="place.description"></span>
+          </script>
+        </div>
+</template>

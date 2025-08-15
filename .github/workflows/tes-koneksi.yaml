@@ -1,9 +1,7 @@
 name: Simple SSH test
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: {}
 
 jobs:
   ssh-test:

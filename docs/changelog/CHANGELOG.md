@@ -2,6 +2,28 @@
 
 Teman Wisata Version List 🚀
 
+## v0.4.0 (2025-08-14)
+
+### Chores
+
+- Enable manual trigger (workflow_dispatch) for update-deployment
+  ([`ec671b9`](https://github.com/TemanWisata/teman-wisata/commit/ec671b9b794ac235a7416687edf1af09213b1fa6))
+
+- Ping actions index
+  ([`e6d51cd`](https://github.com/TemanWisata/teman-wisata/commit/e6d51cdd03c450ec7a6706a5a3657aa9a85a3d73))
+
+- Update pr template to yaml
+  ([`fbe8aae`](https://github.com/TemanWisata/teman-wisata/commit/fbe8aaec2669d503356102b81fb65f25c863b96a))
+
+### Features
+
+- Add NGINX simulation manifest and CI workflows
+  ([`3baccb6`](https://github.com/TemanWisata/teman-wisata/commit/3baccb60162dcb71bf78ce21af05f08cddf8d6c9))
+
+- Tambah folder k3s-manifest untuk deployment
+  ([`a8d0280`](https://github.com/TemanWisata/teman-wisata/commit/a8d028005df1a0a7c87ff501f68e99887125ae05))
+
+
 ## v0.3.0 (2025-08-06)
 
 ### Bug Fixes

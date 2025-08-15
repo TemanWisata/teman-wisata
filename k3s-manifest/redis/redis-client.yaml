@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis-client
+  namespace: backend
+spec:
+  containers:
+    - name: redis
+      image: bitnami/redis:latest
+      command: [ "sleep", "infinity" ]

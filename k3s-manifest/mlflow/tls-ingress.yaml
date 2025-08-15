@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mlflow
+  namespace: mlflow
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # ganti jika masih pakai staging
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - mlflow.teman-wisata.fun
+      secretName: mlflow-tls  # akan dibuat otomatis oleh cert-manager
+  rules:
+    - host: mlflow.teman-wisata.fun
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mlflow
+                port:
+                  number: 80

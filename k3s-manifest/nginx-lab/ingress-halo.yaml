@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: thalo-ingress
+  namespace: default  # ganti jika aplikasi berada di namespace lain
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod  # ganti 'letsencrypt-prod' jika sudah siap
+    acme.cert-manager.io/http01-ingress-class: "nginx"  # hanya untuk HTTP-01, boleh dihapus karena kita pakai DNS-01
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - nginx.teman-wisata.fun
+      secretName: teman-wisata-tls
+  rules:
+    - host: nginx.teman-wisata.fun
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-svc
+                port:
+                  number: 80

@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minio-console-ingress
+  namespace: minio-operator
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod   # Ganti ke letsencrypt-prod jika siap
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # WAJIB jika service backend pakai HTTPS (port 9443 MinIO Console)
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - consoleminio.teman-wisata.fun
+      secretName: consoleminio-teman-wisata-tls
+  rules:
+    - host: consoleminio.teman-wisata.fun
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: myminio-console
+                port:
+                  number: 9443

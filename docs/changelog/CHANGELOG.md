@@ -2,6 +2,14 @@
 
 Teman Wisata Version List 🚀
 
+## v0.7.8 (2025-08-15)
+
+### Bug Fixes
+
+- Path /Dockerfile build -t in nerdctl build-image workflow
+  ([`0c59f13`](https://github.com/TemanWisata/teman-wisata/commit/0c59f13c74b609f34c5ee68411f7082b08669f9f))
+
+
 ## v0.7.7 (2025-08-15)
 
 ### Bug Fixes

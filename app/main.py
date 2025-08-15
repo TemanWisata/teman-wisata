@@ -2,10 +2,11 @@
 
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import Never
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from humanize import naturalsize
 from loguru import logger
 from psutil import cpu_count, cpu_percent, virtual_memory  # type: ignore  # noqa: PGH003
@@ -13,21 +14,18 @@ from scalar_fastapi import get_scalar_api_reference  # type: ignore  # noqa: PGH
 
 from app.api.v1 import auth_router, place_router
 from app.core import CONFIG
+from app.core.utils import Utils
 from app.infrastructure import SupabaseClient
 
 
 @asynccontextmanager
 async def lifecycle(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
     """Application lifecycle events."""
-
-    def raise_supabase_config_error() -> Never:
-        exception_message = "Supabase URL and key must be provided in the configuration."
-        raise ValueError(exception_message)
-
     try:
         logger.info("Starting application...")
         if not all([CONFIG.supabase.url, CONFIG.supabase.key]):
-            raise_supabase_config_error()
+            exception_message = "Supabase URL and key must be provided in the configuration."
+            raise ValueError(exception_message)  # noqa: TRY301
         key = CONFIG.supabase.key.get_secret_value() if CONFIG.supabase.key is not None else None
         await SupabaseClient.setup(CONFIG.supabase.url, key)
         yield
@@ -49,15 +47,32 @@ app = FastAPI(
     docs_url=None,  # Disable Swagger UI
     redoc_url=None,  # Disable ReDoc
 )
-
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or specify your frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(auth_router, prefix="/api/v1", tags=["auth"])
 app.include_router(place_router, prefix="/api/v1", tags=["place"])
 
 
-@app.get("/", include_in_schema=False)
+@app.get("/api", include_in_schema=False)
 async def read_root() -> JSONResponse:
     """Root endpoint."""
+    return JSONResponse(
+        content={
+            "message": "Welcome to the Teman Wisata API!",
+            "version": CONFIG.version,
+            "environment": CONFIG.environment.name,
+        },
+    )
+
+
+@app.get("/metrics", include_in_schema=False)
+async def read_metrics() -> JSONResponse:
+    """Metrics endpoint."""
     return JSONResponse(
         content={
             "message": "Welcome to the Teman Wisata API!",
@@ -75,6 +90,7 @@ async def check_health() -> JSONResponse:
     return JSONResponse(
         content={
             "status": is_healthy,
+            "supabase_connection": is_supabase_healthy,
             "version": CONFIG.version,
             "environment": CONFIG.environment.name,
             "cpu_count": cpu_count(logical=True),
@@ -96,3 +112,6 @@ async def scalar_docs() -> HTMLResponse:
         openapi_url=app.openapi_url,  # type: ignore  # noqa: PGH003
         title=app.title,
     )
+
+
+app.mount("/", StaticFiles(directory=Utils.get_static_path(), html=True), name="static")

@@ -1,0 +1,52 @@
+<div class='card bg-base-100 {{width}} shadow-sm'>
+  <figure>
+    <img src='/place_dummy.webp' alt='Shoes' class='w-full h-48 object-cover' />
+  </figure>
+  <div class='card-body'>
+    <h2 class='card-title' x-text='place.place_name'></h2>
+    <div class='card-actions justify-start'>
+      <div class='badge badge-outline p-3 rounded-full flex items-center gap-2'>
+        <!-- Location SVG (blue) -->
+        <svg
+          width='14'
+          height='14'
+          viewBox='0 0 24 24'
+          fill='#facc15'
+          xmlns='http://www.w3.org/2000/svg'
+        >
+          <path
+            d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z'
+          />
+        </svg>
+        <span x-text='place.province'></span>
+      </div>
+
+      <div class='badge badge-outline p-2 rounded-full flex items-center gap-1'>
+
+        <svg
+          width='16'
+          height='16'
+          viewBox='0 0 24 24'
+          fill='#facc15'
+          xmlns='http://www.w3.org/2000/svg'
+        >
+          <path
+            d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'
+          />
+        </svg>
+        <span x-text='place.avg_rating ? place.avg_rating.toFixed(2) : "0.00"'></span>
+      </div>
+
+      <div
+        class='badge badge-outline p-2 rounded-full'
+        x-text='place.category'
+      ></div>
+
+    </div>
+    <p class='line-clamp-2' x-text='place.description'></p>
+
+    <div class='card-actions justify-end'>
+      <a class='btn btn-primary' href='/place.html'>Lebih lanjut</a>
+    </div>
+  </div>
+</div>

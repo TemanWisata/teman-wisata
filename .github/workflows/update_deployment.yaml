@@ -17,8 +17,8 @@ jobs:
 
       - name: Ambil tag dari manifest
         run: |
-          cd k3s-manifest/simulasi-workflow/app
-          TAG=$(grep "image: teman-wisata:" nginx-deploy.yaml | awk -F: '{print $2}')
+          cd k3s-manifest/app-deploy/
+          TAG=$(grep "image: app-temanwisata:" deploy.yaml | awk -F: '{print $2}')
           echo "TAG yang akan dipakai untuk deployment: ${TAG}"
 
       - name: Deploy ke cluster via SSH
@@ -28,8 +28,8 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_PRIVATE_KEY }}
           script: |
-            cd ${{ secrets.VM_PROJECT_PATH }}/k3s-manifest/simulasi-workflow/app
-            kubectl apply -f nginx-deploy.yaml
-            kubectl rollout status deployment/nginx-deploy -n default --timeout=120s
-            kubectl get pods -n default -l app=nginx -o wide
+            cd ${{ secrets.VM_PROJECT_PATH }}/k3s-manifest/app-deploy
+            kubectl apply -f deploy.yaml
+            kubectl rollout status deployment/fastapi-temanwisata -n backend --timeout=120s
+            kubectl get pods -n backend -l app=teman-wisata -o wide
 

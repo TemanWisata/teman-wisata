@@ -165,3 +165,19 @@ class PlaceService:
             raise
         except Exception as e:  # noqa: BLE001
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))  # noqa: B904
+
+    @staticmethod
+    async def get_user_place_rating(supabase: AsyncClient, user_id: int, place_id: int) -> UserRating | None:
+        """Get a user's rating for a specific place, returned as UserRating schema."""
+        try:
+            response = await supabase.from_("user_place_rating").select("user_id, place_id, rating").eq("user_id", user_id).eq("place_id", place_id).single().execute()
+            data = response.data
+            if data and all(k in data for k in ("user_id", "place_id", "rating")):
+                return UserRating(user_id=data["user_id"], place_id=data["place_id"], rating=float(data["rating"]))
+        except ValidationError as ve:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail={"msg": "Validation error", "errors": ve.errors()})  # noqa: B904
+        except HTTPException:
+            raise
+        except Exception as e:  # noqa: BLE001
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))  # noqa: B904
+        return None

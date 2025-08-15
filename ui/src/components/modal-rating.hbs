@@ -1,0 +1,58 @@
+<dialog id='{{modalRatingId}}' class='modal' x-data='{ userRating: 0 }'>
+  <div class='modal-box'>
+    <h3 class='font-bold text-lg mb-4'>Beri Rating Tempat Ini</h3>
+    <div class='flex flex-col items-center gap-4'>
+      <div class='rating rating-lg'>
+        <input
+          type='radio'
+          name='place-rating'
+          class='mask mask-star-2 bg-yellow-400'
+          x-model='userRating'
+          value='1'
+        />
+        <input
+          type='radio'
+          name='place-rating'
+          class='mask mask-star-2 bg-yellow-400'
+          x-model='userRating'
+          value='2'
+        />
+        <input
+          type='radio'
+          name='place-rating'
+          class='mask mask-star-2 bg-yellow-400'
+          x-model='userRating'
+          value='3'
+        />
+        <input
+          type='radio'
+          name='place-rating'
+          class='mask mask-star-2 bg-yellow-400'
+          x-model='userRating'
+          value='4'
+        />
+        <input
+          type='radio'
+          name='place-rating'
+          class='mask mask-star-2 bg-yellow-400'
+          x-model='userRating'
+          value='5'
+        />
+      </div>
+      <div class="flex *:justify-center items-center gap-2">
+        <button
+          class='btn btn-primary'
+          @click.prevent='submitRating && submitRating(userRating)'
+        >Submit</button>
+        <button
+          class='btn btn-secondary'
+          @click="document.getElementById('{{modalRatingId}}').close()"
+        >Batal</button>
+      </div>
+    </div>
+
+  </div>
+  <form method='dialog' class='modal-backdrop'>
+    <button>close</button>
+  </form>
+</dialog>

@@ -187,7 +187,27 @@ class UserRating(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "user_id": 1,
+                "id": 1,
+                "place_id": 1,
+                "rating": 4.5,
+            },
+        },
+    }
+
+
+class UserRatingRequest(BaseModel):
+    """Schema for user rating request."""
+
+    id: int = Field(description="Unique identifier for the place.")
+    rating: float = Field(
+        ge=0.0,
+        le=5.0,
+        description="Rating given by the user, between 0 and 5.",
+    )
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
                 "place_id": 1,
                 "rating": 4.5,
             },

@@ -1,13 +1,9 @@
 name: build-image
 
 on:
-  push:
-    branches:
-      - k3s-dev
-    paths:
-      - "k3s-manifest/simulasi-workflow/docker/**"
   release:
-    types: [published]
+    types: [published]   # Trigger otomatis saat ada release di main
+  workflow_dispatch: {}   # Bisa juga dijalankan manual
 
 jobs:
   build:
@@ -18,12 +14,10 @@ jobs:
 
       - name: Tentukan TAG
         run: |
-          if [[ "${GITHUB_EVENT_NAME}" == "release" ]]; then
-            echo "TAG=${GITHUB_REF_NAME}" >> $GITHUB_ENV
-          else
-            echo "TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-          fi
-          echo "Tag yang akan dipakai: ${{ env.TAG }}"
+          # Gunakan tag release
+          TAG="${GITHUB_REF_NAME}"
+          echo "TAG=${TAG}" > $GITHUB_ENV
+          echo "Tag yang akan dipakai: ${TAG}"
 
       - name: SSH & Build image di VM
         uses: appleboy/ssh-action@v1.0.3
@@ -36,3 +30,4 @@ jobs:
             sudo nerdctl --address /run/k3s/containerd/containerd.sock \
               build -t teman-wisata:${{ env.TAG }} -f Dockerfile --namespace k8s.io .
             echo "${{ env.TAG }}" > ${{ secrets.VM_PROJECT_PATH }}/.image-tag
+

@@ -14,9 +14,9 @@ loki:
       index: loki-index
       chunks: loki-chunks
     s3:
-      endpoint: myminio-hl.minio-operator.svc.cluster.local:9000
-      access_key_id: minio
-      secret_access_key: minio123
+      endpoint: https://minio.teman-wisata.fun
+      access_key_id: lokiuser
+      secret_access_key: lokiuser
       s3forcepathstyle: true
       insecure: true
 
@@ -45,6 +45,12 @@ loki:
 
   chunks_cache_config: {}  # Hindari auto-cache
   results_cache_config: {} # Hindari result cache
+
+  # Matikan memberlist supaya tidak nyoba resolve DNS
+  memberlist:
+    abort_if_cluster_join_fails: false
+    bind_port: 0
+    join_members: []
 
 singleBinary:
   replicas: 1
@@ -82,7 +88,6 @@ bloomCompactor:
 bloomGateway:
   replicas: 0
 
-# Nonaktifkan chunks cache dan results cache agar tidak membuat pod tambahan
 chunksCache:
   enabled: false
 

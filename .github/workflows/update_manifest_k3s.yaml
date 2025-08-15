@@ -1,0 +1,38 @@
+name: update-manifest
+
+on:
+  workflow_dispatch: {}   # Bisa manual
+  workflow_run:
+    workflows: ["build-image"]
+    types:
+      - completed       # Bisa otomatis setelah build-image sukses
+
+jobs:
+  update-manifest:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true   # Supaya bisa push
+
+      - name: Ambil tag dari file
+        run: |
+          if [ ! -f "${{ secrets.VM_PROJECT_PATH }}/.image-tag" ]; then
+            echo "ERROR: .image-tag tidak ditemukan. Jalankan build-image dulu."
+            exit 1
+          fi
+          TAG=$(cat ${{ secrets.VM_PROJECT_PATH }}/.image-tag)
+          echo "TAG yang akan dipakai: ${TAG}"
+
+      - name: Update manifest dan commit
+        run: |
+          cd k3s-manifest/simulasi-workflow/app
+          sed -i "s|image: teman-wisata:.*|image: teman-wisata:${TAG}|" nginx-deploy.yaml
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add nginx-deploy.yaml
+          git commit -m "Update image tag to ${TAG} by workflow" || echo "No changes to commit"
+          git push origin main
+

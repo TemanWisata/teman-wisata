@@ -20,7 +20,7 @@ export interface LoginResponse {
 export async function loginUser(payload: LoginPayload): Promise<LoginResponse> {
   try {
     const response: AxiosResponse<LoginResponse> = await axios.post(
-      'http://127.0.0.1:8000/api/v1/auth/login',
+      '/api/v1/auth/login',
       payload,
       { headers: { 'Content-Type': 'application/json' } }
     );
@@ -43,11 +43,11 @@ export async function loginUser(payload: LoginPayload): Promise<LoginResponse> {
   }
 }
 
-// Example usage:
-(async () => {
-  const result = await loginUser({
-    username: 'Yourusername',
-    password: 'test1234',
-  });
-  console.log(result);
-})();
+// // Example usage:
+// (async () => {
+//   const result = await loginUser({
+//     username: 'Yourusername',
+//     password: 'test1234',
+//   });
+//   console.log(result);
+// })();

@@ -1,17 +1,16 @@
 import './style.css';
 import 'htmx.org';
-import htmx from 'htmx.org';
 import Alpine from 'alpinejs';
+import { loginForm, topPlaces } from './script';
 
 declare global {
   interface Window {
-    htmx: typeof htmx;
     Alpine: typeof Alpine;
+    loginForm: typeof loginForm;
+    topPlaces: typeof topPlaces;
   }
 }
-window.htmx = htmx;
 window.Alpine = Alpine;
-
+window.loginForm = loginForm;
+window.topPlaces = topPlaces;
 Alpine.start();
-console.log('HTMX loaded:', window.htmx);
-console.log('Alpine loaded:', window.Alpine);

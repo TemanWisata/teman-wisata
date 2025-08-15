@@ -4,6 +4,7 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from humanize import naturalsize
@@ -46,7 +47,13 @@ app = FastAPI(
     docs_url=None,  # Disable Swagger UI
     redoc_url=None,  # Disable ReDoc
 )
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or specify your frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(auth_router, prefix="/api/v1", tags=["auth"])
 app.include_router(place_router, prefix="/api/v1", tags=["place"])
 

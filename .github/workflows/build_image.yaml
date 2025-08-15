@@ -28,7 +28,7 @@ jobs:
           key: ${{ secrets.VM_PRIVATE_KEY }}
           script: |
             sudo nerdctl --address /run/k3s/containerd/containerd.sock \
-              build -t app-temanwisata:${{ env.TAG }} -f deployment/docker/Dockerfile --namespace k8s.io .
+              build -t app-temanwisata:${{ env.TAG }} -f /home/ubuntu/teman-wisata/deployment/dockerDockerfile --namespace k8s.io .
 
       - name: Upload TAG sebagai artifact
         uses: actions/upload-artifact@v4

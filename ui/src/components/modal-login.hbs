@@ -107,7 +107,8 @@
         Belum punya akun?
         <a
           class='link link-primary'
-          onclick="'{{signUpModalId}}'.showModal()"
+          href="#"
+          @click.prevent="document.getElementById('{{loginModalId}}').close(); document.getElementById('{{signUpModalId}}').showModal()"
         >Daftar</a>
       </p>
     </form>

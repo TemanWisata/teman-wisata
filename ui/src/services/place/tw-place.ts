@@ -43,6 +43,18 @@ export async function getPlaceById(id: string): Promise<PlaceResponse> {
         },
       }
     );
+    if (response.status === 401) {
+      // Token expired or invalid
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('token_type');
+      window.location.href = '/'; // Redirect to login/home
+      return {
+        success: false,
+        http_status: 401,
+        message: 'Token expired or invalid',
+        data: null,
+      };
+    }
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response && error.response.data) {

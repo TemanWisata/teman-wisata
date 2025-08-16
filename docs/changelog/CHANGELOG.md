@@ -2,6 +2,14 @@
 
 Teman Wisata Version List 🚀
 
+## v0.10.0 (2025-08-16)
+
+### Features
+
+- Implement user recommendations feature with fetching and display logic
+  ([`f49f4e9`](https://github.com/TemanWisata/teman-wisata/commit/f49f4e9f2e02bf0f4a1cbe84b45690304acf0818))
+
+
 ## v0.9.0 (2025-08-16)
 
 ### Features

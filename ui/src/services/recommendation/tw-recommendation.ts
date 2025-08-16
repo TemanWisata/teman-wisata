@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from 'axios';
 
-export interface Place {
+export interface aPlace {
   id: string;
   place_id: number;
   place_name: string;
@@ -15,7 +15,7 @@ export interface Place {
 }
 
 export interface RecommendedPlace {
-  data: Array<Place | null>;
+  data: Array<aPlace | null>;
 }
 
 export interface RecommendationResponse {
@@ -60,6 +60,18 @@ export async function getUserRecommendations(
         },
       }
     );
+    if (response.status === 401) {
+      // Token expired or invalid
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('token_type');
+      window.location.href = '/'; // Redirect to login/home
+      return {
+        success: false,
+        http_status: 401,
+        message: 'Token expired or invalid',
+        data: { data: [] },
+      };
+    }
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response && error.response.data) {

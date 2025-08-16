@@ -4,3 +4,4 @@ export { placeDetail } from './place/aPlace';
 export { placeRatingAlpine } from './place/ratePlace';
 export { topPlaceProvince } from './place/topPlaceProvince';
 export { userRecommendationComponent } from './recommendation/userRecommendation';
+export { signUpComponent } from './auth/signUp';

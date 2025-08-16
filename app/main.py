@@ -15,7 +15,7 @@ from scalar_fastapi import get_scalar_api_reference  # type: ignore  # noqa: PGH
 from app.api.v1 import auth_router, place_router
 from app.core import CONFIG
 from app.core.utils import Utils
-from app.infrastructure import SupabaseClient
+from app.infrastructure import RedisClient, SupabaseClient
 
 
 @asynccontextmanager
@@ -26,16 +26,26 @@ async def lifecycle(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
         if not all([CONFIG.supabase.url, CONFIG.supabase.key]):
             exception_message = "Supabase URL and key must be provided in the configuration."
             raise ValueError(exception_message)  # noqa: TRY301
+        if CONFIG.redis.url:
+            RedisClient.initialize(CONFIG.redis.url)
+            if not await RedisClient.check_connection():
+                msg = "Failed to connect to Redis."
+                raise ConnectionError(msg)  # noqa: TRY301
+        else:
+            logger.warning("Redis URL is not provided, Redis client will not be initialized.")
+
         key = CONFIG.supabase.key.get_secret_value() if CONFIG.supabase.key is not None else None
         await SupabaseClient.setup(CONFIG.supabase.url, key)
         yield
         SupabaseClient.reset()
+        await RedisClient.close()
         logger.info("Application shutdown complete.")
     except Exception as e:
         logger.error(f"An error occurred during application startup: {e}")
         raise
     finally:
         SupabaseClient.reset()
+        await RedisClient.close()
         logger.info("Supabase client has been reset.")
 
 
@@ -86,10 +96,12 @@ async def read_metrics() -> JSONResponse:
 async def check_health() -> JSONResponse:
     """Health check endpoint."""
     is_supabase_healthy = await SupabaseClient.test_connection()
-    is_healthy = "healthy" if all([is_supabase_healthy]) else "unhealthy"
+    redis_connection = await RedisClient.check_connection() if RedisClient.get_client() else False
+    is_healthy = "healthy" if all([is_supabase_healthy, redis_connection]) else "unhealthy"
     return JSONResponse(
         content={
             "status": is_healthy,
+            "redis_connection": redis_connection,
             "supabase_connection": is_supabase_healthy,
             "version": CONFIG.version,
             "environment": CONFIG.environment.name,

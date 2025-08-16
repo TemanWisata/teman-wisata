@@ -1,0 +1,66 @@
+<div
+  x-data="userRecommendationComponent()"
+  x-init="init()"
+  x-show="show"
+  class="recommendation-section"
+>
+
+<div id="recommendation-user-place" class="container mx-auto p-8">
+    <h2 class="text-2xl font-bold mb-4">Tempat Wisata Untuk Anda</h2>
+    <div class="overflow-x-auto p-4">
+        <div class="grid grid-flow-col gap-4">
+            <template x-if="loading">
+                <div class="w-96">Loading...</div>
+            </template>
+            <template x-if="error">
+                <div class="w-96 text-red-500" x-text="error"></div>
+            </template>
+            <template  x-for="place in recommendations" :key="place.id">
+                <div>
+                    {{> place-card-recommendation width="w-96"}}
+                    <script type="template" x-data>
+                        <span x-text="place.id"></span>
+
+                        <span x-text="place.place_name"></span>
+                        <span x-text="place.province"></span>
+                        <span x-text="place.rating"></span>
+                        <span x-text="place.category"></span>
+                        <span x-text="place.description"></span>
+                    </script>
+                </div>
+            </template>
+
+        </div>
+    </div>
+</div>
+
+
+  {{!-- <h2>Rekomendasi Tempat Wisata Untuk Anda</h2>
+
+  <template x-if="loading">
+    <div class="loading">Memuat rekomendasi...</div>
+  </template>
+
+  <template x-if="error">
+    <div class="error" x-text="error"></div>
+  </template>
+
+  <template x-if="!loading && recommendations.length === 0 && !error">
+    <div class="empty">Tidak ada rekomendasi tersedia.</div>
+  </template>
+
+  <ul>
+    <template x-for="place in recommendations" :key="place.id">
+      <li class="recommendation-item">
+        <h3 x-text="place.place_name"></h3>
+        <p x-text="place.description"></p>
+        <span>Kategori: <span x-text="place.category"></span></span><br>
+        <span>Provinsi: <span x-text="place.province"></span></span><br>
+        <span>Rating: <span x-text="place.rating"></span></span>
+        <template x-if="place.price">
+          <span> | Harga: <span x-text="place.price"></span></span>
+        </template>
+      </li>
+    </template>
+  </ul> --}}
+</div>

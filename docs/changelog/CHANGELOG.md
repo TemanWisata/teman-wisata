@@ -2,6 +2,17 @@
 
 Teman Wisata Version List 🚀
 
+## v0.9.0 (2025-08-16)
+
+### Features
+
+- Enhance recommender API with user ratings retrieval and caching
+  ([`8c9b8b7`](https://github.com/TemanWisata/teman-wisata/commit/8c9b8b76787ff1fe93b52887c07af5a9e66994f2))
+
+- Implement mlflow recommender wrapper
+  ([`f9f0210`](https://github.com/TemanWisata/teman-wisata/commit/f9f0210a11e8c4e5d3b5e078fffca31e00f698f5))
+
+
 ## v0.8.0 (2025-08-16)
 
 ### Chores

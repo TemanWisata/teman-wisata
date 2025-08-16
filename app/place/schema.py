@@ -73,6 +73,14 @@ class ResponseTopPlaceRating(BaseModel):
     )
 
 
+class RecommendedPlace(BaseModel):
+    """Schema for recommended place."""
+
+    data: list[Place | None] = Field(
+        description="List of recommended places.",
+    )
+
+
 class TopPlaceByProvince(BaseModel):
     """Schema for top places by province."""
 

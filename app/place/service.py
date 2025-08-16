@@ -17,6 +17,7 @@ from app.place.schema import (
     TopPlaceRating,
     PaginationResponse,
     ResponsePlace,
+    RecommendedPlace,
     ResponseTopPlaceByCategory,
     ResponseTopPlaceByProvince,
     ResponseTopPlaceRating,
@@ -291,3 +292,34 @@ class PlaceService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to fetch user_place_rating data: {str(e)}",  # noqa: RUF010
             )
+
+    @staticmethod
+    async def get_place_by_list_id(supabase: AsyncClient, place_ids: list[int]) -> RecommendedPlace:
+        """Get places by a list of place IDs."""
+        try:
+            response = await supabase.from_("place").select("*").in_("place_id", place_ids).execute()
+            data = response.data
+            if data:
+                places = TypeAdapter(list[Place]).validate_python(data)
+                return RecommendedPlace(data=places)  # type: ignore  # noqa: PGH003
+            return RecommendedPlace(data=[])
+        except ValidationError as ve:
+            raise HTTPException(  # noqa: B904
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"msg": "Validation error", "errors": ve.errors()},
+            )
+        except HTTPException:
+            raise
+        except Exception as e:  # noqa: BLE001
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))  # noqa: B904
+
+    @staticmethod
+    async def check_if_user_rate(supabase: AsyncClient, user_id: int) -> bool:
+        """Check if a user has rated a specific place."""
+        try:
+            response = await supabase.from_("user_place_rating").select("id").eq("user_id", user_id).limit(1).execute()
+            return len(response.data) > 0
+        except HTTPException:
+            raise
+        except Exception as e:  # noqa: BLE001
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))  # noqa: B904

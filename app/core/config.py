@@ -39,6 +39,19 @@ class OauthSettings(BaseSettings):
     )
 
 
+class RedisSettings(BaseSettings):
+    """Redis configuration settings."""
+
+    url: str | None = Field(default=None, description="The URL of the Redis instance.")
+    model_config = SettingsConfigDict(
+        env_file=Utils.get_root_path().joinpath(".env"),
+        env_file_encoding="utf-8",
+        env_prefix="REDIS_",
+        extra="allow",
+        case_sensitive=False,
+    )
+
+
 class Environment(Enum):
     """Enumeration for different environments."""
 
@@ -58,6 +71,7 @@ class Config(BaseSettings):
         case_sensitive=False,
     )
     oauth: OauthSettings = Field(default_factory=OauthSettings, description="OAuth configuration settings.")
+    redis: RedisSettings = Field(default_factory=RedisSettings, description="Redis configuration settings.")
 
     @property
     def version(self) -> str:

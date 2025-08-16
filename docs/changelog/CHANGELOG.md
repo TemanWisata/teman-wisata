@@ -2,6 +2,22 @@
 
 Teman Wisata Version List 🚀
 
+## v0.11.0 (2025-08-16)
+
+### Features
+
+- Implement logout function
+  ([`7bd50f9`](https://github.com/TemanWisata/teman-wisata/commit/7bd50f94774962ed17174536e1b76352dfd1433d))
+
+- Implement user signup functionality with form validation and error handling
+  ([`b6bd715`](https://github.com/TemanWisata/teman-wisata/commit/b6bd7152083539d2ec2ab05ecd58e7cca608618a))
+
+### Refactoring
+
+- Rename Place interface to aPlace for consistency in user recommendations
+  ([`81d9d06`](https://github.com/TemanWisata/teman-wisata/commit/81d9d06fbd7c484e73d329520334cfc67facb93d))
+
+
 ## v0.10.0 (2025-08-16)
 
 ### Features

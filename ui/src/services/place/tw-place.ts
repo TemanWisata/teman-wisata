@@ -36,7 +36,7 @@ export async function getPlaceById(id: string): Promise<PlaceResponse> {
 
   try {
     const response: AxiosResponse<PlaceResponse> = await axios.get(
-      `http://127.0.0.1:8000/api/v1/place/${id}/`,
+      `/api/v1/place/${id}/`,
       {
         headers: {
           Authorization: `${token_type} ${access_token}`,

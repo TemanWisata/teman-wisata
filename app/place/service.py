@@ -3,8 +3,10 @@
 from collections import defaultdict  # noqa: I001
 from typing import Any
 from fastapi import HTTPException, status
+import pandas as pd
 from pydantic import TypeAdapter, ValidationError
 from supabase import AsyncClient
+from loguru import logger
 from postgrest.base_request_builder import BaseFilterRequestBuilder
 from postgrest.types import CountMethod
 from app.model import Place
@@ -15,6 +17,7 @@ from app.place.schema import (
     TopPlaceRating,
     PaginationResponse,
     ResponsePlace,
+    RecommendedPlace,
     ResponseTopPlaceByCategory,
     ResponseTopPlaceByProvince,
     ResponseTopPlaceRating,
@@ -238,3 +241,85 @@ class PlaceService:
         except Exception as e:  # noqa: BLE001
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))  # noqa: B904
         return None
+
+    @staticmethod
+    async def get_all_user_place_ratings_df(supabase: AsyncClient) -> pd.DataFrame:
+        """Fetch all user_place_rating rows in batches and return as DataFrame
+        with columns: ["user_id", "item_id", "weight", "datetime"].
+        Includes error handling and logging.
+        """  # noqa: D205
+        batch_size = 1000
+        offset = 0
+        all_data: list[dict] = []
+
+        try:
+            while True:
+                response = (
+                    await supabase.from_("user_place_rating")
+                    .select(
+                        "user_id, place_id, rating, updated_at"  # noqa: COM812
+                    )
+                    .range(offset, offset + batch_size - 1)
+                    .execute()
+                )
+                batch = response.data if response.data else []
+                logger.info(f"Fetched batch: offset={offset}, size={len(batch)}")
+                all_data.extend(batch)
+                if len(batch) < batch_size:
+                    break
+                offset += batch_size
+
+            if not all_data:
+                logger.warning("No data found in user_place_rating table.")
+
+            df = pd.DataFrame(all_data)
+            df = df.rename(
+                columns={
+                    "user_id": "user_id",
+                    "place_id": "item_id",
+                    "rating": "weight",
+                    "updated_at": "datetime",
+                },
+            )
+            # Convert 'datetime' column to integer UNIX timestamp
+            df["datetime"] = pd.to_datetime(df["datetime"]).astype(int) // 10**9
+            logger.info(f"Total rows fetched: {len(df)}")
+            return df  # noqa: TRY300
+
+        except Exception as e:  # noqa: BLE001
+            logger.error(f"Error fetching user_place_rating data: {e}", exc_info=True)
+            raise HTTPException(  # noqa: B904
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to fetch user_place_rating data: {str(e)}",  # noqa: RUF010
+            )
+
+    @staticmethod
+    async def get_place_by_list_id(supabase: AsyncClient, place_ids: list[int]) -> RecommendedPlace:
+        """Get places by a list of place IDs."""
+        try:
+            response = await supabase.from_("place").select("*").in_("place_id", place_ids).execute()
+            data = response.data
+            if data:
+                places = TypeAdapter(list[Place]).validate_python(data)
+                return RecommendedPlace(data=places)  # type: ignore  # noqa: PGH003
+            return RecommendedPlace(data=[])
+        except ValidationError as ve:
+            raise HTTPException(  # noqa: B904
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"msg": "Validation error", "errors": ve.errors()},
+            )
+        except HTTPException:
+            raise
+        except Exception as e:  # noqa: BLE001
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))  # noqa: B904
+
+    @staticmethod
+    async def check_if_user_rate(supabase: AsyncClient, user_id: int) -> bool:
+        """Check if a user has rated a specific place."""
+        try:
+            response = await supabase.from_("user_place_rating").select("id").eq("user_id", user_id).limit(1).execute()
+            return len(response.data) > 0
+        except HTTPException:
+            raise
+        except Exception as e:  # noqa: BLE001
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))  # noqa: B904

@@ -33,14 +33,11 @@ export async function getMe(): Promise<MeResponse> {
   }
 
   try {
-    const response: AxiosResponse<MeResponse> = await axios.get(
-      'http://127.0.0.1:8000/api/v1/me',
-      {
-        headers: {
-          Authorization: `${token_type} ${access_token}`,
-        },
-      }
-    );
+    const response: AxiosResponse<MeResponse> = await axios.get('/api/v1/me', {
+      headers: {
+        Authorization: `${token_type} ${access_token}`,
+      },
+    });
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response && error.response.data) {

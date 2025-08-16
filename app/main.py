@@ -1,5 +1,6 @@
 """The main entry point for the Teman Wisata application."""
 
+import os
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -12,10 +13,10 @@ from loguru import logger
 from psutil import cpu_count, cpu_percent, virtual_memory  # type: ignore  # noqa: PGH003
 from scalar_fastapi import get_scalar_api_reference  # type: ignore  # noqa: PGH003
 
-from app.api.v1 import auth_router, place_router
+from app.api.v1 import auth_router, place_router, recommender_router
 from app.core import CONFIG
 from app.core.utils import Utils
-from app.infrastructure import RedisClient, SupabaseClient
+from app.infrastructure import MlflowRecommender, RedisClient, SupabaseClient
 
 
 @asynccontextmanager
@@ -36,6 +37,21 @@ async def lifecycle(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
 
         key = CONFIG.supabase.key.get_secret_value() if CONFIG.supabase.key is not None else None
         await SupabaseClient.setup(CONFIG.supabase.url, key)
+        if CONFIG.mlflow.model_uri:
+            logger.info("Loading MLflow recommender...")
+            os.environ["MLFLOW_TRACKING_URI"] = CONFIG.mlflow.tracking_uri or ""
+            os.environ["AWS_ACCESS_KEY_ID"] = CONFIG.aws.access_key_id or ""
+            os.environ["AWS_SECRET_ACCESS_KEY"] = CONFIG.aws.secret_access_key or ""
+            os.environ["MLFLOW_S3_ENDPOINT_URL"] = CONFIG.mlflow.s3_endpoint_url or ""
+            os.environ["MLFLOW_DISABLE_ENV_CREATION"] = CONFIG.mlflow.disable_env_creation or "true"
+            os.environ["CUDA_VISIBLE_DEVICES"] = ""
+            MlflowRecommender.load_recommender(CONFIG.mlflow.model_uri)
+            logger.info("MLflow recommender loaded successfully.")
+
+            logger.info("Model started successfully.")
+        else:
+            logger.warning("MLflow model URI is not provided, recommender will not be loaded.")
+
         yield
         SupabaseClient.reset()
         await RedisClient.close()
@@ -66,6 +82,7 @@ app.add_middleware(
 )
 app.include_router(auth_router, prefix="/api/v1", tags=["auth"])
 app.include_router(place_router, prefix="/api/v1", tags=["place"])
+app.include_router(recommender_router, prefix="/api/v1", tags=["recommender"])
 
 
 @app.get("/api", include_in_schema=False)

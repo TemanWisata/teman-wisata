@@ -44,7 +44,7 @@ export async function getPlaces(
 
   try {
     const response: AxiosResponse<PlacesResponse> = await axios.post(
-      'http://127.0.0.1:8000/api/v1/place/',
+      '/api/v1/place/',
       params,
       {
         headers: {

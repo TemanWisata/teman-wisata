@@ -20,7 +20,7 @@ export async function registerUser(
 ): Promise<RegisterResponse> {
   try {
     const response: AxiosResponse<RegisterResponse> = await axios.post(
-      'http://127.0.0.1:8000/api/v1/auth/register',
+      '/api/v1/auth/register',
       payload,
       { headers: { 'Content-Type': 'application/json' } }
     );

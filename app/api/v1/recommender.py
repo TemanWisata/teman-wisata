@@ -35,7 +35,7 @@ async def get_user_ratings(
         logger.warning(f"User {user.user_id} has not rated any places yet.")
         return APIResponse(
             success=False,
-            http_status=400,
+            http_status=204,
             message="User has not rated any places yet.",
             data=RecommendedPlace(data=[]),
         )

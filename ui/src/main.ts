@@ -7,6 +7,7 @@ import {
   placeDetail,
   placeRatingAlpine,
   topPlaceProvince,
+  userRecommendationComponent,
 } from './script';
 
 declare global {
@@ -17,6 +18,7 @@ declare global {
     placeDetail: typeof placeDetail;
     placeRatingAlpine: typeof placeRatingAlpine;
     topPlaceProvince: typeof topPlaceProvince;
+    userRecommendationComponent: typeof userRecommendationComponent;
   }
 }
 window.Alpine = Alpine;
@@ -25,4 +27,5 @@ window.topPlaces = topPlaces;
 window.placeDetail = placeDetail;
 window.placeRatingAlpine = placeRatingAlpine;
 window.topPlaceProvince = topPlaceProvince;
+window.userRecommendationComponent = userRecommendationComponent;
 Alpine.start();

@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from 'axios';
 
-export interface Place {
+export interface aPlace {
   id: string;
   place_id: number;
   place_name: string;
@@ -15,7 +15,7 @@ export interface Place {
 }
 
 export interface RecommendedPlace {
-  data: Array<Place | null>;
+  data: Array<aPlace | null>;
 }
 
 export interface RecommendationResponse {

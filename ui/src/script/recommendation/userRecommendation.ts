@@ -1,13 +1,13 @@
 import type {
   RecommendationResponse,
   RecommenderRequest,
-  Place,
+  aPlace,
 } from '../../services/recommendation/tw-recommendation';
 import { getUserRecommendations } from '../../services/recommendation/tw-recommendation';
 let initialized = false;
 export function userRecommendationComponent() {
   return {
-    recommendations: [] as Place[],
+    recommendations: [] as aPlace[],
     loading: false,
     show: true,
     error: '',
@@ -26,7 +26,7 @@ export function userRecommendationComponent() {
             this.show = false;
           }
 
-          this.recommendations = response.data.data.filter(Boolean) as Place[];
+          this.recommendations = response.data.data.filter(Boolean) as aPlace[];
         } else {
           this.error = response.message || 'Failed to fetch recommendations';
         }

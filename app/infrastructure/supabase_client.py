@@ -32,10 +32,17 @@ class SupabaseClient:
 
         if cls.client is None:
             cls.client = await acreate_client(url, key)
-            logger.success("Supabase client has been set up successfully.")
+
         else:
             exception_message = "Supabase client is already set up. If you need to reconfigure, please reset the client first."
             raise RuntimeError(exception_message)
+        connection = await cls.test_connection()
+        if connection:
+            logger.success("Supabase client has been set up successfully.")
+        else:
+            exception_message = f"Failed to connect to Supabase. Please check your URL and key. Supabase Connection: {connection}"
+            logger.error(exception_message)
+            raise ConnectionError(exception_message)
 
     @classmethod
     def reset(cls) -> None:

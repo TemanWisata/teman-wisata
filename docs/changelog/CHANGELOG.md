@@ -2,6 +2,40 @@
 
 Teman Wisata Version List 🚀
 
+## v0.8.0 (2025-08-16)
+
+### Chores
+
+- Add redis and async-timeout dependencies to project
+  ([`b24ac6b`](https://github.com/TemanWisata/teman-wisata/commit/b24ac6b7c50c9954d2884b3837e3383b4b9f15e1))
+
+- Add Redis configuration settings to the application
+  ([`4111b0e`](https://github.com/TemanWisata/teman-wisata/commit/4111b0ee2da621baf422e3d0dbad7df2ab6052b9))
+
+- Add REDIS_URL to example environment file
+  ([`f8ffd4f`](https://github.com/TemanWisata/teman-wisata/commit/f8ffd4fce0d57aac40a2aa966011da39e1bd698e))
+
+- Update build workflow, Dockerfile, deploy manifest, and add rand-secret.yaml
+  ([`ee77651`](https://github.com/TemanWisata/teman-wisata/commit/ee77651b51320565ed928a5314601901e35c25b1))
+
+- Update lockfile
+  ([`ca6a7a9`](https://github.com/TemanWisata/teman-wisata/commit/ca6a7a949a66893d6e14f0a11cfdb1f798343d8b))
+
+- Update tes-koneksi wokflow
+  ([`f49655e`](https://github.com/TemanWisata/teman-wisata/commit/f49655ebd6fc2256d2464699771db3a2764de062))
+
+### Features
+
+- Enhance Supabase client setup with connection validation and error handling
+  ([`f335f6c`](https://github.com/TemanWisata/teman-wisata/commit/f335f6ca931ef141d5a999bdfb0498fc2017a9f8))
+
+- Implement Redis client and update dependency injection
+  ([`6c42e21`](https://github.com/TemanWisata/teman-wisata/commit/6c42e21b1db3eda97fade306150df2cd0962a560))
+
+- Integrate Redis client initialization and health check
+  ([`db1983a`](https://github.com/TemanWisata/teman-wisata/commit/db1983a5d9030142ac913aec56081624bc2c8f0f))
+
+
 ## v0.7.11 (2025-08-15)
 
 ### Bug Fixes
